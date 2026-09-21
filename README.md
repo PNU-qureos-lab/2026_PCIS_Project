@@ -2,7 +2,9 @@
 
 Satellite imagery inventory, glint correction, and semi-analytical shallow-water modelling for the Pacific Island project.
 
-## Project pages
+## HTML files
+
+The links below open the files on GitHub. To use them as interactive pages, download the repository ZIP, extract it, and open `index.html` locally.
 
 - [Satellite inventory](inventory.html) — browse Sentinel-2 and Planet Dove scenes.
 - [ACOLITE glint correction](glint_correction.html) — method and interactive scene comparison.
@@ -12,9 +14,7 @@ Satellite imagery inventory, glint correction, and semi-analytical shallow-water
 
 ## Open the interactive pages
 
-Download this repository as a ZIP, extract the whole folder, and open `index.html`. Keep the asset folders beside the HTML files. The results map uses an online basemap; the project overlays are stored in the repository.
-
-GitHub displays HTML source in its file view. To use the interactive pages, open the downloaded files in a browser.
+Download this repository as a ZIP, extract the whole folder, and open `index.html` in a browser. Keep the asset folders beside the HTML files. The results map uses an online basemap; the project overlays are stored in the repository.
 
 ## Code
 
