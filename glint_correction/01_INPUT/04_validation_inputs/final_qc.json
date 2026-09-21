@@ -1,0 +1,13 @@
+{
+  "scene_gate_pass": false,
+  "negative_visible_pixel_percent": 0.0,
+  "negative_all_eight_band_pixel_percent": 0.0,
+  "spatial_preservation_r": 1.0,
+  "corrected_valid_water_fraction": 0.0,
+  "median_low_ROI_absolute_change": 0.0,
+  "median_high_ROI_absolute_change": 0.0,
+  "pass": false,
+  "retained_product": "Cycle0",
+  "selected_correction_strength": 0.0,
+  "strength_selection_rule": "Largest value in the predeclared sequence 1.00, 0.95, ..., 0.05 that passes all final-QC gates"
+}

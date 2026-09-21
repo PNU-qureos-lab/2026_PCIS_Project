@@ -1,4 +1,0 @@
-numpy
-rasterio
-pandas
-scipy

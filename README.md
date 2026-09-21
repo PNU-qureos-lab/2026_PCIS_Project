@@ -16,3 +16,8 @@ The links below open the files on GitHub. To use them as interactive pages, down
 Download this repository as a ZIP, extract the whole folder, and open `index.html` in a browser. Keep the asset folders beside the HTML files. The results map uses an online basemap; the project overlays are stored in the repository.
 
 The Python code is included in the `semi_analytical/` and `glint_correction/` folders.
+
+The glint package is arranged in execution order. Start with
+[`glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md`](glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md),
+then inspect the numbered input, runner, reference output, generated output,
+and complete source-code folders.

@@ -1,0 +1,11 @@
+numpy
+pandas
+scipy
+matplotlib
+rasterio
+Pillow
+netCDF4
+
+# GDAL/osgeo should normally be installed through conda because its Python
+# wheel must match the system GDAL library.
+# ACOLITE is supplied separately in the workspace's acolite-source directory.

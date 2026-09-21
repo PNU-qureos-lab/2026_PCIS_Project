@@ -1,0 +1,1 @@
+B01 is aligned to the 20 m grid but retains native 60 m spatial information.

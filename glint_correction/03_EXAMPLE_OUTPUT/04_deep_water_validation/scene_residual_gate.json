@@ -1,0 +1,17 @@
+{
+  "injection_validation_pass": true,
+  "low_detected": 1,
+  "medium_detected": 1,
+  "high_detected": 2,
+  "median_component_low": 5.309064250005764e-05,
+  "median_component_medium": 0.0014021468862731095,
+  "median_component_high": 0.0007976720238089738,
+  "high_minus_low_median_component": 0.0007445813813089162,
+  "spearman_alpha_vs_rhog": 0.18409442091098177,
+  "spearman_p": 0.3301368275718978,
+  "high_greater_low_mannwhitney_p": 0.2502675585114762,
+  "candidate_deep_water_only": true,
+  "bathymetry_available": false,
+  "pass": false,
+  "minimum_real_rmse_improvement_reflectance": 0.0014593733665586696
+}

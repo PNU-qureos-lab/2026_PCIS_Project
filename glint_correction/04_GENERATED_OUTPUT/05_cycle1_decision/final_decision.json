@@ -1,0 +1,7 @@
+{
+  "scene": "20260808_S2A",
+  "deep_water_gate_pass": false,
+  "retained_product": "Cycle0",
+  "cycle1_applied": false,
+  "reason": "The deep-water residual gate did not authorize Cycle 1."
+}

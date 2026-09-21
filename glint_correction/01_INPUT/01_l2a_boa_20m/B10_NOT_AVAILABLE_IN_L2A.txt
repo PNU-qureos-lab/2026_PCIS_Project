@@ -1,0 +1,6 @@
+Sentinel-2 B10 is a cirrus band near 1375 nm.
+
+It is present in Level-1C but is not supplied as a Level-2A BOA surface-
+reflectance image by Sen2Cor. Therefore this L2A BOA input package correctly
+contains no B10_BOA_20m.tif. Creating one from L1C would not make it an L2A BOA
+band and would mix processing levels.
