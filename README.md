@@ -2,6 +2,42 @@
 
 Satellite imagery inventory, glint correction, and semi-analytical shallow-water modelling for the Pacific Island project.
 
+## End-to-end workflow
+
+The processing begins with one Sentinel-2 scene. The glint-correction stage
+removes estimated surface reflection and produces corrected water reflectance.
+The semi-analytical stage then uses that corrected reflectance to estimate water
+depth and the relative contributions of coral sand and seagrass.
+
+```mermaid
+flowchart TD
+    A[Sentinel-2 L2A scene<br/>BOA reflectance bands] --> D[Prepare all bands on<br/>one 20 m grid]
+    B[ACOLITE glint products<br/>B11/B12 selection, rhog_ref<br/>and transfer factors] --> E[Glint correction<br/>Cycle 0]
+    C[HydroLight water-only<br/>simulation library] --> F[Deep-water residual<br/>validation]
+    D --> E
+    E --> F
+    F --> G{Is an additional<br/>Cycle 1 correction needed?}
+    G -->|Yes| H[Apply the accepted<br/>Cycle 1 adjustment]
+    G -->|No| I[Keep the Cycle 0 result]
+    H --> J[Final corrected BOA]
+    I --> J
+    J --> K[Convert to above-water Rrs<br/>B01, B02, B03 and B04]
+    K --> L[Select valid pixels with<br/>the shallow-water mask]
+    M[Deep-water Rrs, solar angle<br/>and pure-water coefficients] --> N[HOPE initialization<br/>estimate P, G and X]
+    O[Coral-sand and<br/>seagrass spectra] --> P[D2 candidate generation<br/>and optimization]
+    L --> P
+    N --> P
+    P --> Q[Select the solution<br/>with minimum C4]
+    Q --> R[Estimated water depth]
+    Q --> S[Sand and seagrass fractions]
+    Q --> T[Habitat class]
+    Q --> U[Model cost and<br/>processing status]
+    R --> V[GeoTIFF products and<br/>result maps with legends]
+    S --> V
+    T --> V
+    U --> V
+```
+
 ## HTML files
 
 The links below open the files on GitHub. To use them as interactive pages, download the repository ZIP, extract it, and open `index.html` locally.
