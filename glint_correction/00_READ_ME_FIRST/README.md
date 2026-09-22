@@ -62,6 +62,46 @@ Both output folders use the same internal scientific order:
 8. Check the same 30 shallow-water ROIs before, after Cycle 0, and final.
 9. Export final BOA, above-surface `Rrs`, and below-surface `rrs`.
 
+## What Cycle 1 actually calculates
+
+Cycle 1 is a validation-gated residual correction. It does not run ACOLITE a
+second time. It asks whether a small amount of the **same ACOLITE-derived glint
+spectral shape** remains after Cycle 0.
+
+For each deep-water spectrum and each HydroLight candidate, the code first
+calculates the Cycle-0 residual in every band:
+
+```text
+residual(λ) = Cycle0_BOA(λ) - scene_bias(λ) - HydroLight_water(λ)
+```
+
+The ACOLITE Cycle-0 glint spectrum at that location is used as the residual
+glint basis `g(λ)`. The nonnegative weighted least-squares coefficient is:
+
+```text
+alpha_raw = max(0, Σ[w(λ) residual(λ) g(λ)] / Σ[w(λ) g(λ)^2])
+k = clip(alpha_raw - low_glint_baseline, 0, 1)
+```
+
+The potential remaining glint in each band is therefore `k × g(λ)`. A pixel is
+accepted only when this component exceeds the injection-derived detection
+limit, improves the HydroLight residual RMSE, has sufficient spectral-shape
+similarity, and belongs to a spatially coherent group. For accepted pixels:
+
+```text
+Cycle1_candidate(λ) = Cycle0_BOA(λ) - strength × k × g(λ)
+```
+
+The code tests correction strengths `1.00, 0.95, ..., 0.05` and keeps the
+strongest value that passes all final quality checks. If the injection test,
+30-ROI scene gate, spatial checks, or final quality checks fail, Cycle 1 is not
+applied and Cycle 0 remains the final product.
+
+For the included `20260808_S2A` example, the scene gate failed: only 2 of the
+10 high-glint ROIs passed the residual detection, below the required 5, and the
+residual magnitude did not have the required relationship with `rhog_ref`.
+Consequently, `cycle1_applied` is `false` and **Cycle 0 is the retained output**.
+
 The final filenames use `above_surface_Rrs` and `below_surface_rrs`. This is
 deliberate: Windows cannot safely store two filenames that differ only by the
 capitalization of `Rrs`/`rrs`.

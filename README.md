@@ -32,7 +32,7 @@ flowchart TD
     D --> E
     E --> F
     F --> G{Is an additional<br/>Cycle 1 correction needed?}
-    G -->|Yes| H[Apply the accepted<br/>Cycle 1 adjustment]
+    G -->|Yes| H[Cycle 1 candidate<br/>fit remaining ACOLITE-shaped glint<br/>and subtract the accepted amount]
     G -->|No| I[Keep the Cycle 0 result]
     H --> J[Final corrected BOA]
     I --> J
@@ -52,6 +52,12 @@ flowchart TD
     T --> V
     U --> V
 ```
+
+Cycle 1 is a conditional residual calculation, not another ACOLITE run. It fits
+the remaining Cycle-0 minus HydroLight residual to the original ACOLITE glint
+spectral shape, subtracts only the detected spatially coherent component, and
+retains the result only when every validation gate passes. The included scene
+did not pass that gate, so its final glint-corrected product remains Cycle 0.
 
 ## HTML files
 
