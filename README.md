@@ -9,6 +9,21 @@ removes estimated surface reflection and produces corrected water reflectance.
 The semi-analytical stage then uses that corrected reflectance to estimate water
 depth and the relative contributions of coral sand and seagrass.
 
+### What HOPE and D2 mean
+
+- **HOPE** means **Hyperspectral Optimization Process Exemplar**. It is a
+  physics-based semi-analytical method introduced by Lee and co-authors. In this
+  project, the HOPE equations fit the deep-water spectrum and estimate three
+  water optical parameters: `P` for phytoplankton absorption, `G` for dissolved
+  and detrital absorption, and `X` for particle backscattering.
+- **D2** is the configuration label used in the supplied code for the Lee
+  shallow-water forward model. It predicts how much of the measured signal
+  comes from the water column and how much comes from the bottom after
+  attenuation through the water. The inversion changes depth and the
+  sand–seagrass mixture until the modeled four-band reflectance best matches
+  Sentinel-2. `D2` is a model label in this implementation, not a separate
+  acronym.
+
 ```mermaid
 flowchart TD
     A[Sentinel-2 L2A scene<br/>BOA reflectance bands] --> D[Prepare all bands on<br/>one 20 m grid]

@@ -9,13 +9,21 @@ sand and seagrass. For every valid shallow-water pixel, the model searches for
 the combination of water depth, sand fraction, and seagrass fraction that best
 reproduces the satellite observation.
 
-The workflow has two connected model stages:
+## What HOPE and D2 mean
 
-- **HOPE water-column initialization:** estimates the deep-water optical
-  parameters `P`, `G`, and `X` from the scene's deep-water reflectance.
-- **D2 shallow-water inversion:** combines those water-column properties with
-  sand and seagrass spectra, tests candidate solutions, and selects the solution
-  with the smallest spectral mismatch (`C4`).
+- **HOPE** means **Hyperspectral Optimization Process Exemplar**. It is a
+  physics-based semi-analytical approach introduced by Lee and co-authors for
+  retrieving water properties and shallow-water information from reflectance.
+  Here, HOPE fits the scene's deep-water reflectance and estimates `P`
+  (phytoplankton absorption), `G` (dissolved and detrital absorption), and `X`
+  (particle backscattering). These values describe the water column used in the
+  later shallow-water calculation.
+- **D2** is the configuration label used in the supplied code for the Lee
+  shallow-water forward model. It combines the HOPE-derived water properties,
+  water depth, and sand–seagrass bottom reflectance to predict the four-band
+  satellite signal. The inversion tests depth and bottom-mixture candidates and
+  chooses the result with the smallest spectral mismatch (`C4`). `D2` is a model
+  label in this implementation, not a separate acronym.
 
 The final products are estimated water depth, sand fraction, seagrass fraction,
 habitat class, model cost, and processing status. The package contains the input
