@@ -1,0 +1,2 @@
+﻿scene,deep_Rrs_443_sr-1,deep_Rrs_490_sr-1,deep_Rrs_560_sr-1,deep_Rrs_665_sr-1,accepted_ROI_count,accepted_pixel_count,solar_zenith_deg,aggregation_method,selection_method,selection_confidence,Rrs_product_type
+20260808_S2A,0.031985532492399216,0.027795815840363503,0.020468775182962418,0.012216796167194843,15,735,33.1765162268517,median of all accepted deep-water pixels,"Finite-positive, <=5% within-ROI CV, ensemble spectral consistency; fixed >=1.5 km mapped-land distance",STANDARD,Rrs_approx from glint-corrected Sen2Cor BOA divided by pi

@@ -1,0 +1,44 @@
+{
+  "scene": "20260808_S2A",
+  "experimental": true,
+  "processed_pixels": 7505,
+  "KML_mask_pixels": 31416,
+  "positive_four_band_pixels": 7505,
+  "invalid_or_nonpositive_input_pixels": 23911,
+  "successful_pixels": 7505,
+  "failed_pixels": 0,
+  "solar_zenith_deg": 33.1765162268517,
+  "deep_Rrs": [
+    0.031985532492399216,
+    0.027795815840363503,
+    0.020468775182962418,
+    0.012216796167194843
+  ],
+  "aw4": [
+    0.007046,
+    0.015,
+    0.0619,
+    0.429
+  ],
+  "bbw4": [
+    0.0024389436546000003,
+    0.0015771053680000001,
+    0.0008857968490000001,
+    0.00042161970130000004
+  ],
+  "PGX": {
+    "P": 0.07329385512945208,
+    "G": 0.0,
+    "X": 0.0374027597631335,
+    "C_IOP": 0.14322310621418735
+  },
+  "initialization": "Final code v3 four-band initialization from Sentinel B01-B04",
+  "habitat_codes": {
+    "0": "NoData",
+    "1": "sand",
+    "2": "seagrass",
+    "3": "mixed",
+    "4": "uncertain"
+  },
+  "fraction_policy": "Raw unbounded optimization retained; habitat assigned only when both fractions are physical"
+}

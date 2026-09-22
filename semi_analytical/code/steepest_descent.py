@@ -1,0 +1,482 @@
+"""English documentation is provided in README.md."""
+from types import SimpleNamespace
+import numpy as np
+from numba import njit
+from hope_iop_model import A0, A1, S, Y
+from model import WAVES, G0, G1
+
+EPS = np.finfo(np.float64).eps
+GRADIENT_TOL = np.sqrt(EPS)
+LINE_RTOL = np.sqrt(EPS)
+GOLDEN_RATIO = (1.0 + np.sqrt(5.0))/2.0
+GOLDEN_COMPLEMENT = (3.0 - np.sqrt(5.0))/2.0
+# The model rationale and parameter policy are documented in README.md.
+MAX_ITERATIONS = 200000
+# The model rationale and parameter policy are documented in README.md.
+# The model rationale and parameter policy are documented in README.md.
+# The model rationale and parameter policy are documented in README.md.
+MAX_EVALUATIONS = 20000000
+TRACE_STRIDE = 100
+TRACE_COLUMNS = ('iteration','C_IOP','projected_gradient_inf','alpha','line_evaluations',
+                 'P','G','X','delta_P','delta_G','delta_X','nfev','step_norm')
+HF_TRACE_COLUMNS = ('iteration','C4','gradient_inf','alpha','line_evaluations',
+                    'z','F','delta_z','delta_F','nfev','step_norm')
+SOLVER_CONFIG = dict(
+    solver='nonnegative_pgx_feasible_steepest_descent', gradient='analytic_chain_rule',
+    coordinates='original (P,G,X) or (z,F); no variable scaling',
+    direction='PGX: negative gradient projected onto feasible tangent cone; HF unchanged',
+    update='x_new=x-alpha*feasible_gradient; line interval ends at the first bound',
+    line_search='Brent analytic directional-derivative root; Brent scalar minimization fallback',
+    line_search_initial_interval='gradient norm squared / residual directional curvature',
+    line_search_relative_tolerance=LINE_RTOL,
+    directional_derivative_root_tolerance='2*epsilon*abs(alpha)+1ULP(alpha)',
+    cost_display_roundoff='epsilon*(1+abs(previous_cost)); never changes recorded cost',
+    gradient_tolerance=GRADIENT_TOL,
+    max_iterations=MAX_ITERATIONS, max_evaluations=MAX_EVALUATIONS,
+    trace_stride=TRACE_STRIDE, trace_first_iterations=20,
+    parameter_bounds={'P':[0.0,None], 'G':[0.0,None], 'X':[0.0,None]},
+    mathematical_domain='P>0 for real log; G>=0; X>=0; nonzero denominators; finite arithmetic',
+    convergence='PGX: feasible projected-gradient/KKT residual; HF: original gradient; no global certificate',
+    line_search_guarantee='numerical local line minimum only; no global guarantee',
+    scale_argument='diagnostics only; does not affect iterations', other_optimizer_fallback=False)
+
+
+@njit(cache=True, error_model='numpy')
+def _value_jac(pgx, observed, aw, bbw):
+    """English documentation is provided in README.md."""
+    residual = np.zeros(4)
+    jac = np.zeros((4,3))
+    gradient = np.zeros(3)
+    p,g,x = pgx
+    if p <= 0.0 or g < 0.0 or x < 0.0 or not np.all(np.isfinite(pgx)):
+        return np.inf,gradient,jac,residual
+    log_p = np.log(p)
+    for j in range(4):
+        shape_g = np.exp(-S*(WAVES[j]-440.0))
+        shape_x = (550.0/WAVES[j])**Y
+        a = aw[j]+(A0[j]+A1[j]*log_p)*p+g*shape_g
+        bb = bbw[j]+x*shape_x
+        total = a+bb
+        if total == 0.0 or not np.isfinite(total):
+            return np.inf,gradient,jac,residual
+        u = bb/total
+        below = (G0+G1*u)*u
+        denominator = 1.0-1.7*below
+        if denominator == 0.0:
+            return np.inf,gradient,jac,residual
+        residual[j] = (0.52*below/denominator-observed[j])/observed[j]
+        common = 0.52*(G0+2.0*G1*u)/(denominator*denominator*observed[j]*total*total)
+        jac[j,0] = common*(-bb)*(A0[j]+A1[j]*(log_p+1.0))
+        jac[j,1] = common*(-bb)*shape_g
+        jac[j,2] = common*a*shape_x
+    cost = np.sum(residual*residual)/4.0
+    for k in range(3):
+        for j in range(4):
+            gradient[k] += 0.5*jac[j,k]*residual[j]
+    if not (np.isfinite(cost) and np.all(np.isfinite(gradient)) and np.all(np.isfinite(jac))):
+        return np.inf,gradient,jac,residual
+    return cost,gradient,jac,residual
+
+
+@njit(cache=True, error_model='numpy')
+def _hf_value_jac(hf, observed, xc, xb, dp, rho_first, rho_second):
+    """English documentation is provided in README.md."""
+    residual = np.zeros(4)
+    jac = np.zeros((4,2))
+    gradient = np.zeros(2)
+    if not np.all(np.isfinite(hf)):
+        return np.inf,gradient,jac,residual
+    z,fraction = hf
+    for j in range(4):
+        ec,eb = np.exp(-xc[j]*z),np.exp(-xb[j]*z)
+        rho = rho_second[j]+fraction*(rho_first[j]-rho_second[j])
+        below = dp[j]*(-np.expm1(-xc[j]*z))+(rho/np.pi)*eb
+        denominator = 1.0-1.7*below
+        if denominator == 0.0 or not np.isfinite(below):
+            return np.inf,gradient,jac,residual
+        residual[j] = (0.52*below/denominator-observed[j])/observed[j]
+        common = 0.52/(denominator*denominator*observed[j])
+        jac[j,0] = common*(dp[j]*xc[j]*ec-(rho/np.pi)*xb[j]*eb)
+        jac[j,1] = common*((rho_first[j]-rho_second[j])/np.pi)*eb
+    cost = np.sum(residual*residual)/4.0
+    for k in range(2):
+        for j in range(4):
+            gradient[k] += 0.5*jac[j,k]*residual[j]
+    if not (np.isfinite(cost) and np.all(np.isfinite(gradient)) and np.all(np.isfinite(jac))):
+        return np.inf,gradient,jac,residual
+    return cost,gradient,jac,residual
+
+
+@njit(cache=True, error_model='numpy')
+def _evaluate(x,data,kind):
+    if kind == 0:
+        result = _value_jac(x,data[0],data[1],data[2])
+    else:
+        result = _hf_value_jac(x,data[0],data[1],data[2],data[3],data[4],data[5])
+    # The model rationale and parameter policy are documented in README.md.
+    # The model rationale and parameter policy are documented in README.md.
+    if not np.isfinite(result[0]):
+        data[6,0] += 1.0
+    return result
+
+
+@njit(cache=True, error_model='numpy')
+def _feasible_gradient(x,gradient,kind):
+    """English documentation is provided in README.md."""
+    feasible = gradient.copy()
+    if kind == 0:
+        for k in range(1,3):
+            if x[k] == 0.0 and gradient[k] > 0.0:
+                feasible[k] = 0.0
+    return feasible
+
+
+@njit(cache=True, error_model='numpy')
+def _line_limit(x,gradient,kind):
+    """English documentation is provided in README.md."""
+    end = np.inf
+    if kind == 0:
+        if gradient[0] > 0.0:
+            end = np.nextafter(x[0]/gradient[0],0.0)
+            while end > 0.0 and x[0]-end*gradient[0] <= 0.0:
+                end = np.nextafter(end,0.0)
+        for k in range(1,3):
+            if gradient[k] > 0.0:
+                end = min(end,x[k]/gradient[k])
+    return end
+
+
+@njit(cache=True, error_model='numpy')
+def _line_point(alpha,x,gradient,kind):
+    """English documentation is provided in README.md."""
+    point = x-alpha*gradient
+    if kind == 0:
+        for k in range(1,3):
+            if gradient[k] > 0.0 and alpha == x[k]/gradient[k]:
+                point[k] = 0.0
+    return point
+
+
+@njit(cache=True, error_model='numpy')
+def _line_cost(alpha,x,gradient,data,kind):
+    cost,_,_,_ = _evaluate(_line_point(alpha,x,gradient,kind),data,kind)
+    return cost
+
+
+@njit(cache=True, error_model='numpy')
+def _line_derivative_root(x,gradient,data,kind,right,budget):
+    """English documentation is provided in README.md."""
+    a,b = 0.0,right
+    fa = -np.sum(gradient*gradient)
+    cb,gb,_,_ = _evaluate(_line_point(b,x,gradient,kind),data,kind)
+    fb = -np.sum(gb*gradient)
+    nfev = 1
+    if not np.isfinite(cb) or not np.isfinite(fb):
+        return 0.0,np.inf,nfev,False
+    # The model rationale and parameter policy are documented in README.md.
+    # The model rationale and parameter policy are documented in README.md.
+    domain_end = _line_limit(x,gradient,kind)
+    while fb < 0.0 and nfev < budget:
+        # The model rationale and parameter policy are documented in README.md.
+        # The model rationale and parameter policy are documented in README.md.
+        if b == domain_end:
+            return b,cb,nfev,True
+        next_b = min(b*GOLDEN_RATIO,domain_end)
+        if not np.isfinite(next_b) or next_b <= b:
+            return 0.0,np.inf,nfev,False
+        b = next_b
+        cb,gb,_,_ = _evaluate(_line_point(b,x,gradient,kind),data,kind)
+        nfev += 1
+        fb = -np.sum(gb*gradient)
+        if not np.isfinite(cb) or not np.isfinite(fb):
+            return 0.0,np.inf,nfev,False
+    c,fc = a,fa
+    d,e = b-a,b-a
+    while nfev < budget:
+        if (fb > 0.0 and fc > 0.0) or (fb < 0.0 and fc < 0.0):
+            c,fc = a,fa
+            d,e = b-a,b-a
+        if abs(fc) < abs(fb):
+            old_b,old_fb = b,fb
+            a,fa = old_b,old_fb
+            b,fb = c,fc
+            c,fc = old_b,old_fb
+        tolerance = 2.0*EPS*abs(b)+abs(np.nextafter(b,np.inf)-b)
+        midpoint = (c-b)/2.0
+        if abs(midpoint) <= tolerance or fb == 0.0:
+            final_cost = _line_cost(b,x,gradient,data,kind)
+            return b,final_cost,nfev+1,True
+        if abs(e) >= tolerance and abs(fa) > abs(fb):
+            s = fb/fa
+            if a == c:
+                p,q = 2.0*midpoint*s,1.0-s
+            else:
+                q,r = fa/fc,fb/fc
+                p = s*(2.0*midpoint*q*(q-r)-(b-a)*(r-1.0))
+                q = (q-1.0)*(r-1.0)*(s-1.0)
+            if p > 0.0:
+                q = -q
+            p = abs(p)
+            if 2.0*p < min(3.0*midpoint*q-abs(tolerance*q),abs(e*q)):
+                e,d = d,p/q
+            else:
+                d,e = midpoint,midpoint
+        else:
+            d,e = midpoint,midpoint
+        a,fa = b,fb
+        if abs(d) > tolerance:
+            b += d
+        else:
+            b += tolerance if midpoint > 0.0 else -tolerance
+        cb,gb,_,_ = _evaluate(_line_point(b,x,gradient,kind),data,kind)
+        nfev += 1
+        fb = -np.sum(gb*gradient)
+        if not np.isfinite(cb) or not np.isfinite(fb):
+            return 0.0,np.inf,nfev,False
+    return 0.0,np.inf,nfev,False
+
+
+@njit(cache=True, error_model='numpy')
+def _line_minimize(x,cost,gradient,jac,data,kind,budget):
+    """English documentation is provided in README.md."""
+    g2 = np.sum(gradient*gradient)
+    curvature = 0.0
+    for j in range(4):
+        jg = 0.0
+        for k in range(len(x)):
+            jg += jac[j,k]*gradient[k]
+        curvature += 0.5*jg*jg
+    if not np.isfinite(g2) or curvature <= 0.0 or not np.isfinite(curvature):
+        return 0.0,cost,0,False
+    seed = g2/curvature
+    if seed <= 0.0 or not np.isfinite(seed) or budget < 1:
+        return 0.0,cost,0,False
+    # The model rationale and parameter policy are documented in README.md.
+    domain_end = _line_limit(x,gradient,kind)
+    seed = min(seed,domain_end)
+    if seed <= 0.0 or not np.any(x-seed*gradient != x):
+        return 0.0,cost,0,False
+    fseed = _line_cost(seed,x,gradient,data,kind)
+    nfev = 1
+    left,right = 0.0,seed
+    best,fbest = 0.0,cost
+    if fseed < cost:
+        best,fbest = seed,fseed
+        while right < domain_end:
+            if nfev >= budget:
+                return best,fbest,nfev,False
+            new_right = min(right*GOLDEN_RATIO,domain_end)
+            if not np.isfinite(new_right) or new_right <= right:
+                return best,fbest,nfev,False
+            fnew = _line_cost(new_right,x,gradient,data,kind)
+            nfev += 1
+            previous = right
+            right = new_right
+            if fnew >= fbest:
+                break
+            left = previous/GOLDEN_RATIO if previous != seed else 0.0
+            best,fbest = right,fnew
+    # The model rationale and parameter policy are documented in README.md.
+    # The model rationale and parameter policy are documented in README.md.
+    # The model rationale and parameter policy are documented in README.md.
+    if nfev < budget-1:
+        root,root_cost,root_calls,root_ok = _line_derivative_root(
+            x,gradient,data,kind,right,budget-nfev)
+        nfev += root_calls
+        if root_ok and root > 0.0 and root_cost <= cost+EPS*(1.0+abs(cost)):
+            return root,root_cost,nfev,True
+    # The model rationale and parameter policy are documented in README.md.
+    scalar_x = best
+    # The model rationale and parameter policy are documented in README.md.
+    # The model rationale and parameter policy are documented in README.md.
+    fx = fbest
+    w,v = scalar_x,scalar_x
+    fw,fv = fx,fx
+    previous_step,proposed_step = 0.0,0.0
+    while nfev < budget:
+        midpoint = (left+right)/2.0
+        # The model rationale and parameter policy are documented in README.md.
+        ulp = abs(np.nextafter(scalar_x,np.inf)-scalar_x)
+        tolerance = LINE_RTOL*abs(scalar_x)+ulp
+        tolerance2 = 2.0*tolerance
+        if (abs(scalar_x-midpoint) <= tolerance2-(right-left)/2.0
+                or np.nextafter(left,right) >= right):
+            return best,fbest,nfev,best > 0.0 and fbest < cost
+        use_parabola = False
+        if abs(previous_step) > tolerance and np.isfinite(fx+fw+fv):
+            r = (scalar_x-w)*(fx-fv)
+            q = (scalar_x-v)*(fx-fw)
+            p = (scalar_x-v)*q-(scalar_x-w)*r
+            q = 2.0*(q-r)
+            if q > 0.0:
+                p = -p
+            q = abs(q)
+            saved_step = previous_step
+            previous_step = proposed_step
+            if (q > 0.0 and abs(p) < abs(q*saved_step)/2.0
+                    and p > q*(left-scalar_x) and p < q*(right-scalar_x)):
+                proposed_step = p/q
+                u = scalar_x+proposed_step
+                if u-left < tolerance2 or right-u < tolerance2:
+                    proposed_step = tolerance if scalar_x < midpoint else -tolerance
+                use_parabola = True
+        if not use_parabola:
+            previous_step = right-scalar_x if scalar_x < midpoint else left-scalar_x
+            proposed_step = GOLDEN_COMPLEMENT*previous_step
+        if abs(proposed_step) >= tolerance:
+            u = scalar_x+proposed_step
+        else:
+            u = scalar_x+(tolerance if proposed_step > 0.0 else -tolerance)
+        if u == scalar_x:
+            u = np.nextafter(scalar_x,right if scalar_x < midpoint else left)
+        fu = _line_cost(u,x,gradient,data,kind)
+        nfev += 1
+        if fu < fbest:
+            best,fbest = u,fu
+        if fu <= fx:
+            if u >= scalar_x:
+                left = scalar_x
+            else:
+                right = scalar_x
+            v,fv = w,fw
+            w,fw = scalar_x,fx
+            scalar_x,fx = u,fu
+        else:
+            if u < scalar_x:
+                left = u
+            else:
+                right = u
+            if fu <= fw or w == scalar_x:
+                v,fv = w,fw
+                w,fw = u,fu
+            elif fu <= fv or v == scalar_x or v == w:
+                v,fv = u,fu
+    return best,fbest,nfev,False
+
+
+@njit(cache=True, error_model='numpy')
+def _solve(start,data,kind,max_iterations,max_evaluations,gradient_tol,trace_stride):
+    x = start.copy()
+    cost,gradient,jac,residual = _evaluate(x,data,kind)
+    nfev,nit,status = 1,0,0
+    dimension = len(x)
+    trace = np.zeros((max_iterations//trace_stride+24,7+2*dimension))
+    state = np.zeros(7+2*dimension)
+    state[1] = cost
+    state[2] = np.max(np.abs(_feasible_gradient(x,gradient,kind))) if np.isfinite(cost) else np.inf
+    state[5:5+dimension] = x
+    state[-2] = nfev
+    trace[0] = state
+    ntrace = 1
+    if not np.isfinite(cost):
+        return x,cost,jac,residual,-4,nit,nfev,np.inf,trace[:ntrace]
+    for iteration in range(1,max_iterations+1):
+        feasible = _feasible_gradient(x,gradient,kind)
+        optimality = np.max(np.abs(feasible))
+        if optimality <= gradient_tol:
+            status = 1
+            break
+        if nfev >= max_evaluations:
+            status = -2
+            break
+        alpha,trial_cost,line_evals,ok = _line_minimize(
+            x,cost,feasible,jac,data,kind,max_evaluations-nfev-1)
+        nfev += line_evals
+        if not ok:
+            status = -2 if nfev >= max_evaluations-1 else -3
+            break
+        trial = _line_point(alpha,x,feasible,kind)
+        if not np.any(trial != x):
+            status = -3
+            break
+        new_cost,new_gradient,new_jac,new_residual = _evaluate(trial,data,kind)
+        nfev += 1
+        if not np.isfinite(new_cost) or new_cost > cost+EPS*(1.0+abs(cost)):
+            status = -3
+            break
+        delta = trial-x
+        x,cost = trial,new_cost
+        gradient,jac,residual = new_gradient,new_jac,new_residual
+        nit = iteration
+        optimality = np.max(np.abs(_feasible_gradient(x,gradient,kind)))
+        state[0:5] = np.array([float(iteration),cost,optimality,alpha,float(line_evals)])
+        state[5:5+dimension] = x
+        state[5+dimension:5+2*dimension] = delta
+        state[-2] = nfev
+        state[-1] = np.sqrt(np.sum(delta*delta))
+        if iteration <= 20 or iteration % trace_stride == 0 or optimality <= gradient_tol:
+            trace[ntrace] = state
+            ntrace += 1
+    optimality = np.max(np.abs(_feasible_gradient(x,gradient,kind)))
+    if optimality <= gradient_tol:
+        status = 1
+    if trace[ntrace-1,0] != nit:
+        trace[ntrace] = state
+        ntrace += 1
+    return x,cost,jac,residual,status,nit,nfev,optimality,trace[:ntrace]
+
+
+def _result(raw,invalid_evaluations):
+    x,cost,jac,residual,status,nit,nfev,optimality,trace = raw
+    messages = {1:'physical_gradient_stationary',0:'maximum_iterations',
+                -2:'maximum_evaluations',-3:'line_search_or_numerical_stagnation',
+                -4:'undefined_or_nonfinite_initial_model'}
+    return SimpleNamespace(x=x,cost=cost,jac=jac,fun=residual,status=status,
+        success=status==1,message=messages[status],nit=nit,nfev=nfev,
+        njev=nfev,optimality=optimality,trace=trace,
+        invalid_evaluations=int(invalid_evaluations))
+
+
+def _controls(max_iterations,max_evaluations,gradient_tol,trace_stride):
+    values = (MAX_ITERATIONS if max_iterations is None else int(max_iterations),
+              MAX_EVALUATIONS if max_evaluations is None else int(max_evaluations),
+              float(gradient_tol),int(trace_stride))
+    if min(values[0],values[1],values[3]) < 1 or not np.isfinite(values[2]) or values[2] <= 0:
+        raise ValueError('Computation budgets, trace stride and tolerance must be positive')
+    return values
+
+
+def _inputs(start,bands,dimension):
+    x = np.asarray(start,dtype=np.float64)
+    arrays = [np.asarray(v,dtype=np.float64) for v in bands]
+    if x.shape != (dimension,) or not np.isfinite(x).all():
+        raise ValueError('Starting point has wrong dimension or nonfinite values')
+    if any(v.shape != (4,) or not np.isfinite(v).all() for v in arrays):
+        raise ValueError('Exactly four finite bands are required')
+    if np.any(arrays[0] == 0):
+        raise ValueError('Relative residual requires nonzero observations')
+    data = np.zeros((7,4),dtype=np.float64)
+    for row,array in enumerate(arrays):
+        data[row] = array
+    return x,data
+
+
+def solve_pgx(start,observed,aw,bbw,scale,*,max_iterations=MAX_ITERATIONS,
+              max_evaluations=MAX_EVALUATIONS,gradient_tol=GRADIENT_TOL,
+              trace_stride=TRACE_STRIDE):
+    """English documentation is provided in README.md."""
+    x,data = _inputs(start,(observed,aw,bbw),3)
+    if x[0] <= 0.0 or np.any(x < 0.0):
+        raise ValueError('PGX must be nonnegative; P must be strictly positive for ln(P)')
+    diagnostic_scale = np.asarray(scale,dtype=np.float64)
+    if (diagnostic_scale.shape != (3,) or not np.isfinite(diagnostic_scale).all()
+            or np.any(diagnostic_scale <= 0)):
+        raise ValueError('Diagnostic scale must contain three positive finite values')
+    raw = _solve(x,data,0,*_controls(
+        max_iterations,max_evaluations,gradient_tol,trace_stride))
+    result = _result(raw,data[6,0])
+    result.raw_gradient_inf = float(np.max(np.abs(0.5*result.jac.T@result.fun)))
+    result.projected_gradient_inf = result.optimality
+    if result.success:
+        result.message = 'nonnegative_projected_gradient_stationary'
+    return result
+
+
+def solve_hf(start,observed,xc,xb,dp,rho_first,rho_second,*,
+             max_iterations=MAX_ITERATIONS,max_evaluations=MAX_EVALUATIONS,
+             gradient_tol=GRADIENT_TOL,trace_stride=TRACE_STRIDE):
+    """English documentation is provided in README.md."""
+    x,data = _inputs(start,(observed,xc,xb,dp,rho_first,rho_second),2)
+    raw = _solve(x,data,1,*_controls(
+        max_iterations,max_evaluations,gradient_tol,trace_stride))
+    return _result(raw,data[6,0])

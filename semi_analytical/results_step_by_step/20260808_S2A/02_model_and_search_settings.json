@@ -1,0 +1,31 @@
+{
+  "scene": "20260808_S2A",
+  "bands": [
+    "B01",
+    "B02",
+    "B03",
+    "B04"
+  ],
+  "wavelengths_nm": [
+    443,
+    490,
+    560,
+    665
+  ],
+  "bottom_components": [
+    "coral_sand",
+    "seagrass"
+  ],
+  "depth_step_m": 0.1,
+  "fraction_step": 0.01,
+  "top_k": 3,
+  "maximum_evaluations_per_seed": 10000,
+  "habitat_codes": {
+    "0": "NoData",
+    "1": "sand",
+    "2": "seagrass",
+    "3": "mixed",
+    "4": "uncertain"
+  },
+  "fraction_policy": "Raw unbounded optimization retained; habitat assigned only when both fractions are physical"
+}

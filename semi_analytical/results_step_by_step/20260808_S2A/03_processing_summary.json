@@ -1,0 +1,9 @@
+{
+  "scene": "20260808_S2A",
+  "processed_pixels": 7505,
+  "shallow_mask_pixels": 31416,
+  "positive_four_band_pixels": 7505,
+  "invalid_or_nonpositive_input_pixels": 23911,
+  "successful_pixels": 7505,
+  "failed_pixels": 0
+}
