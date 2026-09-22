@@ -1,6 +1,49 @@
 # One-scene semi-analytical workflow
 
-This package documents and runs the four-band HOPE/D2 semi-analytical inversion for one Sentinel-2A scene.
+## What this workflow does
+
+This workflow estimates shallow-water depth and bottom composition from one
+Sentinel-2A image. It uses the corrected satellite reflectance in four visible
+bands, optical properties of pure seawater, and reference spectra for coral
+sand and seagrass. For every valid shallow-water pixel, the model searches for
+the combination of water depth, sand fraction, and seagrass fraction that best
+reproduces the satellite observation.
+
+The workflow has two connected model stages:
+
+- **HOPE water-column initialization:** estimates the deep-water optical
+  parameters `P`, `G`, and `X` from the scene's deep-water reflectance.
+- **D2 shallow-water inversion:** combines those water-column properties with
+  sand and seagrass spectra, tests candidate solutions, and selects the solution
+  with the smallest spectral mismatch (`C4`).
+
+The final products are estimated water depth, sand fraction, seagrass fraction,
+habitat class, model cost, and processing status. The package contains the input
+values, Python code, and step-by-step outputs needed to reproduce the included
+one-scene example.
+
+## Workflow diagram
+
+```mermaid
+flowchart TD
+    A[Corrected Sentinel-2 reflectance<br/>B01, B02, B03 and B04] --> D[Read and align the four bands]
+    B[Shallow-water mask] --> D
+    C[Deep-water reflectance<br/>and solar zenith angle] --> E[HOPE initialization<br/>estimate P, G and X]
+    W[Pure-water absorption<br/>and scattering values] --> E
+    D --> F[Keep valid shallow-water pixels]
+    E --> G[Build the water-column model]
+    S[Coral-sand spectrum] --> H[Build initial depth and<br/>bottom-fraction candidates]
+    V[Seagrass spectrum] --> H
+    F --> H
+    G --> H
+    H --> I[Evaluate candidate spectra]
+    I --> J[Retain the three candidates<br/>with the lowest C4]
+    J --> K[Optimize depth, sand fraction<br/>and seagrass fraction]
+    K --> L[Select the minimum-C4 solution]
+    L --> M[Export depth, fractions,<br/>C4 and processing status]
+    M --> N[Classify habitat]
+    N --> O[Create GeoTIFF results<br/>and maps with legends]
+```
 
 ```text
 Scene: 20260808_S2A
