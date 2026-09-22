@@ -4,25 +4,8 @@ Satellite imagery inventory, glint correction, and semi-analytical shallow-water
 
 ## End-to-end workflow
 
-The processing begins with one Sentinel-2 scene. The glint-correction stage
-removes estimated surface reflection and produces corrected water reflectance.
-The semi-analytical stage then uses that corrected reflectance to estimate water
-depth and the relative contributions of coral sand and seagrass.
-
-### What HOPE and D2 mean
-
-- **HOPE** means **Hyperspectral Optimization Process Exemplar**. It is a
-  physics-based semi-analytical method introduced by Lee and co-authors. In this
-  project, the HOPE equations fit the deep-water spectrum and estimate three
-  water optical parameters: `P` for phytoplankton absorption, `G` for dissolved
-  and detrital absorption, and `X` for particle backscattering.
-- **D2** is the configuration label used in the supplied code for the Lee
-  shallow-water forward model. It predicts how much of the measured signal
-  comes from the water column and how much comes from the bottom after
-  attenuation through the water. The inversion changes depth and the
-  sand–seagrass mixture until the modeled four-band reflectance best matches
-  Sentinel-2. `D2` is a model label in this implementation, not a separate
-  acronym.
+Follow the diagram from the satellite inputs to the final depth and habitat
+products. The sections below the diagram explain each stage in the same order.
 
 ```mermaid
 flowchart TD
@@ -53,11 +36,57 @@ flowchart TD
     U --> V
 ```
 
-Cycle 1 is a conditional residual calculation, not another ACOLITE run. It fits
-the remaining Cycle-0 minus HydroLight residual to the original ACOLITE glint
-spectral shape, subtracts only the detected spatially coherent component, and
-retains the result only when every validation gate passes. The included scene
-did not pass that gate, so its final glint-corrected product remains Cycle 0.
+## Processing stages
+
+### 1. Satellite and supporting inputs
+
+The workflow begins with Sentinel-2 L2A bottom-of-atmosphere reflectance. The
+supporting inputs are the ACOLITE glint products, HydroLight water-only spectra,
+a shallow-water mask, pure-water optical coefficients, and coral-sand and
+seagrass spectra.
+
+### 2. ACOLITE glint correction: Cycle 0
+
+The Sentinel-2 bands are aligned on one 20 m grid. ACOLITE provides the B11/B12
+selection, `rhog_ref`, and band-transfer factors. These values estimate the
+surface-glint contribution in every optical band. Subtracting that estimate from
+the original BOA reflectance produces Cycle 0.
+
+### 3. HydroLight validation and the Cycle 1 decision
+
+HydroLight spectra represent plausible water-only signals. The workflow
+compares them with deep-water Cycle-0 spectra to test whether an
+ACOLITE-shaped residual remains. Cycle 1 fits that residual to the original
+ACOLITE glint spectral shape and subtracts only a detected, spatially coherent
+component. It is a conditional Python calculation rather than another ACOLITE
+run. The result is retained only when every validation gate passes.
+
+The included scene did not pass the Cycle 1 scene gate. Its final
+glint-corrected product therefore remains Cycle 0.
+
+### 4. HOPE water-column initialization
+
+**HOPE** means **Hyperspectral Optimization Process Exemplar**. It is a
+physics-based semi-analytical method introduced by Lee and co-authors. Here,
+HOPE fits the deep-water spectrum and estimates `P` for phytoplankton
+absorption, `G` for dissolved and detrital absorption, and `X` for particle
+backscattering. These parameters describe the water column for the next stage.
+
+### 5. D2 shallow-water inversion
+
+**D2** is the configuration label used in the supplied code for the Lee
+shallow-water forward model. It predicts the water-column and bottom
+contributions to the measured reflectance. The inversion changes water depth
+and the sand–seagrass mixture until the modeled four-band reflectance best
+matches Sentinel-2. `D2` is a model label in this implementation, not a separate
+acronym.
+
+### 6. Final outputs
+
+The solution with the lowest four-band spectral mismatch (`C4`) supplies the
+estimated depth, sand fraction, seagrass fraction, habitat class, model cost,
+and processing status. The workflow exports these products as GeoTIFF files and
+maps with legends.
 
 ## HTML files
 
