@@ -1,0 +1,7 @@
+{
+  "scene": "20260808_S2A",
+  "ROI_count": 30,
+  "residual_detections": 4,
+  "scene_gate_pass": false,
+  "meaning": "Cycle 1 may proceed only when the full gate passes."
+}

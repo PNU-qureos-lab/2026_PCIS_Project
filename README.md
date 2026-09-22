@@ -17,6 +17,7 @@ Download this repository as a ZIP, extract the whole folder, and open `index.htm
 
 The Python code is included in the `semi_analytical/` and `glint_correction/` folders.
 
-The one-scene glint package has one `code` folder and one
-`results_step_by_step` folder. Start with
-[`glint_correction/README.md`](glint_correction/README.md).
+The glint package is arranged in execution order. Start with
+[`glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md`](glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md),
+then inspect the numbered input, runner, reference output, generated output,
+and complete source-code folders.
