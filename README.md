@@ -96,6 +96,7 @@ The links below open the files on GitHub. To use them as interactive pages, down
 - [ACOLITE glint correction](glint_correction.html) — method and interactive scene comparison.
 - [Semi-analytical concept](semi_analytical_concept.html) — model workflow and output interpretation.
 - [Semi-analytical results map](semi_analytical_map.html) — explore Sentinel-2 depth and habitat products geographically.
+- [Planet Dove four-band results viewer](planet_dove_map.html) — inspect Planet depth, bottom fractions, habitat, spectral error, and model cost over a selectable basemap.
 
 ## Open the interactive pages
 

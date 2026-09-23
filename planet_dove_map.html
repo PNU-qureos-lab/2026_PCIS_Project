@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Planet Dove four-band results viewer</title>
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <script src="vendor/leaflet.js"></script>
+  <script src="planet_previews/manifest.js"></script>
+  <style>
+    *{box-sizing:border-box}html,body{height:100%;margin:0;font:16px/1.45 Arial,sans-serif;color:#17384c}header{min-height:82px;background:#123c60;color:white;padding:13px 20px}header h1{font-size:22px;margin:0 0 9px}header a{color:#def5ff;margin-right:18px}.layout{display:grid;grid-template-columns:350px 1fr;height:calc(100% - 82px)}aside{padding:20px;background:white;overflow:auto;border-right:1px solid #cfdee6}#map{height:100%;background:#dce9ee}label{display:block;font-weight:bold;margin:16px 0}select,input[type=range]{display:block;width:100%;margin-top:7px;padding:9px;font-size:15px}.legend,.status{padding:15px;border-radius:10px;margin-top:16px}.legend{background:#f1f7f9;border:1px solid #ccdde4}.status{background:#fff3d8;border-left:5px solid #d77a00}.bar{height:17px;border-radius:5px;margin:10px 0}.labels{display:flex;justify-content:space-between;font-size:12px}.row{display:flex;align-items:center;gap:9px;margin:8px 0}.swatch{width:17px;height:17px;border:1px solid #79909d;display:inline-block}.note{font-size:14px;color:#587283}.actions{display:grid;gap:9px;margin-top:17px}.button{display:block;text-align:center;padding:11px;border-radius:8px;background:#147f78;color:white;text-decoration:none;font-weight:bold}.button.secondary{background:#e8f1f3;color:#155168;border:1px solid #b8ced5}@media(max-width:760px){header{height:auto}.layout{display:block;height:auto}aside{border:0}#map{height:68vh}}
+  </style>
+</head>
+<body>
+  <header><h1>Planet Dove four-band semi-analytical viewer</h1><nav><a href="index.html">Home</a><a href="semi_analytical_map.html">Sentinel-2 map</a><a href="semi_analytical_concept.html">Concept</a><a href="glint_correction.html">Glint correction</a></nav></header>
+  <div class="layout">
+    <aside>
+      <p><strong>2025-11-17 · Planet SuperDove</strong></p>
+      <p class="note">Explore the same result rasters committed in the Planet four-band package.</p>
+      <label>Product
+        <select id="product">
+          <option value="depth_m">Estimated depth</option>
+          <option value="sand_fraction">Sand fraction</option>
+          <option value="seagrass_fraction">Seagrass fraction</option>
+          <option value="habitat">Habitat class</option>
+          <option value="rrs_rmse">Rrs spectral RMSE</option>
+          <option value="relative_cost">Relative model cost</option>
+        </select>
+      </label>
+      <label>Overlay opacity<input id="opacity" type="range" min="0" max="1" step=".05" value=".85"></label>
+      <div class="legend"><strong id="legendTitle">Legend</strong><div id="legendBody"></div></div>
+      <div class="status"><strong>Exploratory only</strong><br>Depth and habitat are model outputs, not field-validated measurements. The Planet deep-water and atmospheric reference remain unvalidated.</div>
+      <div class="actions"><a id="downloadTif" class="button" href="#" download>Download selected GeoTIFF</a><a id="downloadPng" class="button secondary" href="#" download>Download overlay PNG</a><a class="button secondary" href="semi_analytical/planet_dove_four_band/00_READ_ME_FIRST/README.md">Read method and QC</a></div>
+    </aside>
+    <div id="map" aria-label="Interactive map of Planet Dove four-band results"></div>
+  </div>
+  <script>
+    const result=window.PLANET_RESULT,$=id=>document.getElementById(id);
+    const map=L.map('map');
+    const streets=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+    const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,attribution:'Tiles &copy; Esri'});
+    L.control.layers({'Map':streets,'Satellite':satellite},null,{collapsed:false}).addTo(map);
+    let overlay=null;
+    function number(value,digits=3){return Number(value).toFixed(digits)}
+    function gradient(colors,labels,note='Transparent: outside the model mask.'){
+      return `<div class="bar" style="background:linear-gradient(90deg,${colors})"></div><div class="labels">${labels.map(x=>`<span>${x}</span>`).join('')}</div><p class="note">${note}</p>`;
+    }
+    function legend(kind,layer){
+      const title=$('product').selectedOptions[0].textContent;$('legendTitle').textContent=title+' legend';
+      if(kind==='depth_m')return gradient('#30123b,#4145ab,#2aa7d6,#39d353,#f4e61e,#f47918,#7a0403',['0 m','1','2','3','4','5 m'],'Black: deeper than 5 m. Transparent: outside the model mask.');
+      if(kind==='sand_fraction')return gradient('#fff7bc,#41b6c4,#225ea8',['0','0.25','0.5','0.75','1']);
+      if(kind==='seagrass_fraction')return gradient('#ffffcc,#78c679,#005a32',['0','0.25','0.5','0.75','1']);
+      if(kind==='rrs_rmse')return gradient('#000004,#721f81,#f1605d,#fcfdbf',['0',number(layer.vmax/3,4),number(layer.vmax*2/3,4),number(layer.vmax,4)],'Scale ends at the scene 95th percentile; brighter means poorer spectral agreement.');
+      if(kind==='relative_cost')return gradient('#440154,#31688e,#35b779,#fde725',['0',number(layer.vmax/3,3),number(layer.vmax*2/3,3),number(layer.vmax,3)],'Scale ends at the scene 95th percentile; brighter means higher model cost.');
+      return '<div class="row"><i class="swatch" style="background:#e9c75f"></i>Sand dominant (≥70%)</div><div class="row"><i class="swatch" style="background:#198754"></i>Seagrass dominant (≥70%)</div><div class="row"><i class="swatch" style="background:#8846b7"></i>Mixed sand–seagrass</div><div class="row"><i class="swatch" style="background:#8c9499"></i>Uncertain: >5 m or high error</div><p class="note">Transparent: outside the model mask.</p>';
+    }
+    function draw(fit=false){
+      const kind=$('product').value,layer=result.layers[kind],e=result.extent,bounds=[[e[1],e[0]],[e[3],e[2]]];
+      if(overlay)map.removeLayer(overlay);overlay=L.imageOverlay(layer.image,bounds,{opacity:+$('opacity').value,interactive:false}).addTo(map);
+      if(fit)map.fitBounds(bounds);$('legendBody').innerHTML=legend(kind,layer);$('downloadTif').href=layer.geotiff;$('downloadPng').href=layer.image;$('downloadTif').download=layer.geotiff.split('/').pop();$('downloadPng').download=layer.image.split('/').pop();
+    }
+    $('product').onchange=()=>draw(false);$('opacity').oninput=()=>overlay&&overlay.setOpacity(+$('opacity').value);draw(true);
+  </script>
+</body>
+</html>
