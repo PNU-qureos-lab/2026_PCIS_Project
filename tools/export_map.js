@@ -52,7 +52,7 @@
     text(ctx, 'Transparent: NoData.', x, y + 153, 15, 'normal', '#526e7e');
   }
 
-  window.saveResultMap = async function ({imageUrl, scene, product, productLabel}) {
+  window.saveResultMap = async function ({imageUrl, scene, product, productLabel, sensorLabel='Satellite'}) {
     const img = await loadImage(imageUrl);
     const side = 390, top = 86, pad = 30;
     const scale = Math.min(1, 1600 / img.naturalWidth);
@@ -64,12 +64,16 @@
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
     text(ctx, `${scene} · ${productLabel}`, pad, 43, 27, 'bold');
-    text(ctx, 'Sentinel-2 semi-analytical result', pad, 70, 17, 'normal', '#587283');
+    text(ctx, `${sensorLabel} semi-analytical result`, pad, 70, 17, 'normal', '#587283');
     ctx.drawImage(img, pad, top, mapWidth, mapHeight);
     const x = pad * 2 + mapWidth;
     text(ctx, `${productLabel} legend`, x, top + 20, 21, 'bold');
     if (product === 'habitat') habitatLegend(ctx, x, top + 48);
-    else gradientLegend(ctx, product, x, top + 48, side - pad);
+    else if (palettes[product]) gradientLegend(ctx, product, x, top + 48, side - pad);
+    else {
+      text(ctx, 'Low', x, top + 72, 16);
+      text(ctx, 'High', x + 280, top + 72, 16);
+    }
     text(ctx, 'CRS: EPSG:32748 · 20 m pixels', x, canvas.height - 52, 15, 'normal', '#587283');
     text(ctx, '2026 PCIS Project', x, canvas.height - 27, 15, 'bold', '#587283');
     const link = document.createElement('a');

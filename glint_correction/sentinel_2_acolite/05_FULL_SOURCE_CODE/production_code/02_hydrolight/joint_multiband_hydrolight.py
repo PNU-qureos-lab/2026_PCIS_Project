@@ -36,7 +36,7 @@ from rasterio.warp import reproject
 from scipy.ndimage import binary_opening
 from scipy.stats import spearmanr
 
-ROOT = Path(__file__).resolve().parents[4]  # ACOLITE-Glint Correction workspace
+ROOT = Path(__file__).resolve().parents[5]  # glint_correction folder
 FULL_CODE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(FULL_CODE / "01_acolite_cycle0"))
 import acolite_helpers as archive

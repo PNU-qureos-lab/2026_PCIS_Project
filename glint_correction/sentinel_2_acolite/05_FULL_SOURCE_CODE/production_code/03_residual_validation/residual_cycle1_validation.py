@@ -31,7 +31,7 @@ from scipy.ndimage import binary_erosion, binary_opening, distance_transform_edt
 from scipy.stats import mannwhitneyu, spearmanr
 
 
-ROOT = Path(__file__).resolve().parents[4]  # ACOLITE-Glint Correction workspace
+ROOT = Path(__file__).resolve().parents[5]  # glint_correction folder
 FULL_CODE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(FULL_CODE / "02_hydrolight"))
 import controlled_hydrolight_validation as controlled

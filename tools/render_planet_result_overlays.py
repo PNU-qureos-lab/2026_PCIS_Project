@@ -78,7 +78,7 @@ def main(source: Path, destination: Path) -> None:
         save_rgba(rgba, destination / output_name)
         layers[key] = {
             "image": f"planet_previews/{output_name}",
-            "geotiff": f"semi_analytical/planet_dove_four_band/03_FINAL_PRODUCTS/{filename}",
+            "geotiff": f"semi_analytical/planet_dove/03_FINAL_PRODUCTS/{filename}",
             "vmin": vmin,
             "vmax": vmax,
         }
@@ -94,7 +94,7 @@ def main(source: Path, destination: Path) -> None:
     save_rgba(rgba, destination / output_name, categorical=True)
     layers["habitat"] = {
         "image": f"planet_previews/{output_name}",
-        "geotiff": f"semi_analytical/planet_dove_four_band/03_FINAL_PRODUCTS/{habitat_name}",
+        "geotiff": f"semi_analytical/planet_dove/03_FINAL_PRODUCTS/{habitat_name}",
     }
     dataset = None
 

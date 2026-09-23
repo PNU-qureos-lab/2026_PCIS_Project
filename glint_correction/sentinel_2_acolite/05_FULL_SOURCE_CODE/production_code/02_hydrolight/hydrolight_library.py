@@ -13,7 +13,7 @@ import pandas as pd
 from scipy.interpolate import RegularGridInterpolator
 
 
-ROOT = Path(__file__).resolve().parents[4]  # ACOLITE-Glint Correction workspace
+ROOT = Path(__file__).resolve().parents[5]  # glint_correction folder
 V4 = ROOT / "outputs" / "Tidung_Glint_Removal_V4_SceneSpecific_HydroLight_20260911"
 GRID = (
     V4

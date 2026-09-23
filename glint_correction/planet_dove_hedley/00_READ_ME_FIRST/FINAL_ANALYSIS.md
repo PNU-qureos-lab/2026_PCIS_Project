@@ -14,5 +14,6 @@ The standard Hedley equation was calculated for every delivered scene. Corrected
 - The strongest currently usable candidate is **2025-11-17**, but it remains conditional on independent validation.
 - For scenes labelled **NO CORRECTION NEEDED**, use the original masked Planet SR rather than forcing Hedley.
 - Do not use scenes labelled **REJECT** as corrected products.
-- Corrected SR is the primary numerical output. Approximate Rrs/rrs products are exploratory and not field-validated.
+- Corrected SR is the primary numerical output. Approximate Rrs/rrs products are exploratory.
 - The decision thresholds are documented project QC rules; they are not part of Hedley et al. (2005).
+

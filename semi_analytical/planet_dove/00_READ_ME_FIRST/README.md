@@ -28,5 +28,5 @@ Decision: EXPLORATORY ONLY — Sentinel-comparable geometry and scale; Planet de
 The code files retain the absolute source paths from the audited production run
 as provenance. Change `SOURCE`, `SENTINEL_MASK`, and `OUTPUT` near the top of
 `run_planetscope_four_band_sentinel_comparable.py` before rerunning it on a
-different computer. Do not interpret the committed map as field-validated
-bathymetry.
+different computer. Treat the committed map as an exploratory satellite-model result pending further reference review.
+

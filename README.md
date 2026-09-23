@@ -88,31 +88,16 @@ estimated depth, sand fraction, seagrass fraction, habitat class, model cost,
 and processing status. The workflow exports these products as GeoTIFF files and
 maps with legends.
 
-## HTML files
+## Project resources
 
-The links below open the files on GitHub. To use them as interactive pages, download the repository ZIP, extract it, and open `index.html` locally.
+- [Satellite inventory](inventory.html)
+- [Glint-correction methods and results](glint_correction.html)
+- [Semi-analytical concept](semi_analytical_concept.html)
+- [Combined Sentinel-2 and Planet Dove results viewer](semi_analytical_map.html)
 
-- [Satellite inventory](inventory.html) — browse Sentinel-2 and Planet Dove scenes.
-- [ACOLITE glint correction](glint_correction.html) — method and interactive scene comparison.
-- [Semi-analytical concept](semi_analytical_concept.html) — model workflow and output interpretation.
-- [Semi-analytical results map](semi_analytical_map.html) — explore Sentinel-2 depth and habitat products geographically.
-- [Planet Dove four-band results viewer](planet_dove_map.html) — inspect Planet depth, bottom fractions, habitat, spectral error, and model cost over a selectable basemap.
+## Code and reproducible packages
 
-## Open the interactive pages
+- [`glint_correction/`](glint_correction/) separates the Sentinel-2 ACOLITE workflow and the Planet Dove Hedley workflow.
+- [`semi_analytical/`](semi_analytical/) separates the Sentinel-2 and Planet Dove inversion packages.
 
-Download this repository as a ZIP, extract the whole folder, and open `index.html` in a browser. Keep the asset folders beside the HTML files. The results map uses an online basemap; the project overlays are stored in the repository.
-
-The Python code is included in the `semi_analytical/` and `glint_correction/` folders.
-
-## PlanetScope workflows
-
-PlanetScope work is kept in separate folders so it is not confused with the
-Sentinel-2 ACOLITE/HydroLight workflow:
-
-- [`glint_correction/planet_dove_standard_hedley/`](glint_correction/planet_dove_standard_hedley/) — standard Hedley calculation for four Tidung SuperDove scenes, with intermediate rasters, complete QC, source code, and an HTML result report. Raw licensed Planet imagery is not redistributed.
-- [`semi_analytical/planet_dove_four_band/`](semi_analytical/planet_dove_four_band/) — one-scene, four-band Planet HOPE/D2 experiment with prepared inputs, intermediate mask, complete GeoTIFF outputs, QC summaries, code, and a four-panel figure. This result is explicitly exploratory because its deep-water/atmospheric reference is not independently validated.
-
-The glint package is arranged in execution order. Start with
-[`glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md`](glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md),
-then inspect the numbered input, runner, reference output, generated output,
-and complete source-code folders.
+Download the repository ZIP, extract the complete folder, and open `index.html` to use the interactive pages. Keep all asset folders beside the HTML files.

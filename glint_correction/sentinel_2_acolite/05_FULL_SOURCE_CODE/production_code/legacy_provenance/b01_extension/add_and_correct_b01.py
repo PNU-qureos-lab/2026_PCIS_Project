@@ -23,7 +23,7 @@ import numpy as np
 import rasterio
 from rasterio.warp import reproject, Resampling
 
-PROJECT = Path(__file__).resolve().parents[5]  # ACOLITE-Glint Correction workspace
+PROJECT = Path(__file__).resolve().parents[6]  # ACOLITE-Glint Correction workspace
 
 ROOT = Path(r"H:\Sentinel-2\Tidung\Tidung_Glint_Corrected_Products_20260913")
 L2A = Path(r"H:\Sentinel-2\Tidung\L2A")

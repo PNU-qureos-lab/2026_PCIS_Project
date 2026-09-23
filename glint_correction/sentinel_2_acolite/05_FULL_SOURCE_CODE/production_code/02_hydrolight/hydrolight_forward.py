@@ -36,7 +36,7 @@ from rasterio.warp import transform as transform_xy
 import hydrolight_inversion as common
 
 
-ROOT = Path(__file__).resolve().parents[4]  # ACOLITE-Glint Correction workspace
+ROOT = Path(__file__).resolve().parents[5]  # glint_correction folder
 SOURCE = ROOT / "outputs" / "Tidung_Glint_Comparison_Rerun_20260903"
 GEOMETRY_GRID = ROOT / "outputs" / "hydrolight_tidung_reference_grid_20260903"
 DEFAULT_OUTPUT = ROOT / "outputs" / "Tidung_TSM_HydroLight_Forward_20260904"

@@ -18,4 +18,5 @@ The multi-date land mask, UDM2 screening, 300 m offshore distance and spectral d
 
 ## Interpretation
 
-Corrected surface reflectance is the primary result. `Rrs_Approx` and `rrs_Approx` are convenience transformations and are not field-validated aquatic reflectance products. HydroLight may be used separately for evaluation, but it is not part of the subtraction.
+Corrected surface reflectance is the primary result. `Rrs_Approx` and `rrs_Approx` are convenience transformations. HydroLight may be used separately for evaluation, but it is not part of the subtraction.
+

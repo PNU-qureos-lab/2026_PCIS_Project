@@ -30,7 +30,7 @@ from scipy.optimize import least_squares
 import hydrolight_inversion as common
 
 
-ROOT = Path(__file__).resolve().parents[4]  # ACOLITE-Glint Correction workspace
+ROOT = Path(__file__).resolve().parents[5]  # glint_correction folder
 OUT = ROOT / "outputs" / "Tidung_Residual_Glint_V3_Experiment_20260911"
 TEMPLATE = ROOT / "outputs" / "hydrolight_pilot_20251101" / "inputs" / "ITIDHL_CLR.txt"
 FACTORS = ROOT / "outputs" / "Tidung_Joint_HydroLight_Glint_Multiband_Experiment_20260911" / "03_Glint_ACOLITE_Cycle0" / "20241025_S2A" / "multiband_glint_factors.csv"

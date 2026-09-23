@@ -38,7 +38,7 @@ import rasterio
 from rasterio.warp import transform as transform_xy
 
 
-ROOT = Path(__file__).resolve().parents[4]  # ACOLITE-Glint Correction workspace
+ROOT = Path(__file__).resolve().parents[5]  # glint_correction folder
 SOURCE = ROOT / "outputs" / "Tidung_Glint_Comparison_Rerun_20260903"
 DEFAULT_OUTPUT = ROOT / "outputs" / "Tidung_TSM_HydroLight_Inversion_20260904"
 PILOT_TEMPLATE = ROOT / "outputs" / "hydrolight_pilot_20251101" / "inputs" / "ITIDHL_CLR.txt"

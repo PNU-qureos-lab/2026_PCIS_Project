@@ -45,7 +45,7 @@ from osgeo import gdal, osr
 from scipy.ndimage import binary_dilation, distance_transform_edt
 
 
-ROOT = Path(__file__).resolve().parents[4]  # ACOLITE-Glint Correction workspace
+ROOT = Path(__file__).resolve().parents[5]  # glint_correction folder
 ACOLITE_SOURCE = ROOT / "acolite-source"
 sys.path.insert(0, str(ACOLITE_SOURCE))
 
