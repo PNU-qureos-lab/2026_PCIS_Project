@@ -103,6 +103,14 @@ Download this repository as a ZIP, extract the whole folder, and open `index.htm
 
 The Python code is included in the `semi_analytical/` and `glint_correction/` folders.
 
+## PlanetScope workflows
+
+PlanetScope work is kept in separate folders so it is not confused with the
+Sentinel-2 ACOLITE/HydroLight workflow:
+
+- [`glint_correction/planet_dove_standard_hedley/`](glint_correction/planet_dove_standard_hedley/) — standard Hedley calculation for four Tidung SuperDove scenes, with intermediate rasters, complete QC, source code, and an HTML result report. Raw licensed Planet imagery is not redistributed.
+- [`semi_analytical/planet_dove_four_band/`](semi_analytical/planet_dove_four_band/) — one-scene, four-band Planet HOPE/D2 experiment with prepared inputs, intermediate mask, complete GeoTIFF outputs, QC summaries, code, and a four-panel figure. This result is explicitly exploratory because its deep-water/atmospheric reference is not independently validated.
+
 The glint package is arranged in execution order. Start with
 [`glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md`](glint_correction/00_READ_ME_FIRST/01_WORKFLOW_ORDER.md),
 then inspect the numbered input, runner, reference output, generated output,

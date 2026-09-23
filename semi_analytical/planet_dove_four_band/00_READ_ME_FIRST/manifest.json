@@ -1,0 +1,78 @@
+[
+  {
+    "path": "00_READ_ME_FIRST\\README.md",
+    "bytes": 952
+  },
+  {
+    "path": "01_INPUT_20M\\2025-11-17_444nm_Rrs_approx_20m_mean.tif",
+    "bytes": 85565
+  },
+  {
+    "path": "01_INPUT_20M\\2025-11-17_492nm_Rrs_approx_20m_mean.tif",
+    "bytes": 86167
+  },
+  {
+    "path": "01_INPUT_20M\\2025-11-17_566nm_Rrs_approx_20m_mean.tif",
+    "bytes": 86182
+  },
+  {
+    "path": "01_INPUT_20M\\2025-11-17_666nm_Rrs_approx_20m_mean.tif",
+    "bytes": 87213
+  },
+  {
+    "path": "02_INTERMEDIATE\\2025-11-17_common_Sentinel_shallow_mask.tif",
+    "bytes": 1583
+  },
+  {
+    "path": "03_FINAL_PRODUCTS\\2025-11-17_Planet_4band_depth_m.tif",
+    "bytes": 11220
+  },
+  {
+    "path": "03_FINAL_PRODUCTS\\2025-11-17_Planet_4band_habitat_exploratory.tif",
+    "bytes": 2073
+  },
+  {
+    "path": "03_FINAL_PRODUCTS\\2025-11-17_Planet_4band_relative_cost.tif",
+    "bytes": 19661
+  },
+  {
+    "path": "03_FINAL_PRODUCTS\\2025-11-17_Planet_4band_Rrs_RMSE.tif",
+    "bytes": 19407
+  },
+  {
+    "path": "03_FINAL_PRODUCTS\\2025-11-17_Planet_4band_sand_fraction.tif",
+    "bytes": 11659
+  },
+  {
+    "path": "03_FINAL_PRODUCTS\\2025-11-17_Planet_4band_seagrass_fraction.tif",
+    "bytes": 12461
+  },
+  {
+    "path": "04_QC\\Planet_4band_Sentinel_comparable_four_panel.png",
+    "bytes": 358660
+  },
+  {
+    "path": "04_QC\\summary.csv",
+    "bytes": 640
+  },
+  {
+    "path": "04_QC\\summary.json",
+    "bytes": 2285
+  },
+  {
+    "path": "05_CODE\\run_command.txt",
+    "bytes": 174
+  },
+  {
+    "path": "05_CODE\\run_planetscope_four_band_sentinel_comparable.py",
+    "bytes": 12569
+  },
+  {
+    "path": "05_CODE\\run_planetscope_semianalytical_three_scenarios.py",
+    "bytes": 28770
+  },
+  {
+    "path": "Tidung_Planet_4Band_Sentinel_Comparable.html",
+    "bytes": 1139
+  }
+]

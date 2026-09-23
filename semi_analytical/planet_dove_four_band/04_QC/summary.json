@@ -1,0 +1,92 @@
+{
+  "scene": "2025-11-17",
+  "bands_nm": [
+    444,
+    492,
+    566,
+    666
+  ],
+  "grid": "Sentinel 20 m grid",
+  "spatial_resampling": "mean of valid Planet 3 m pixels",
+  "candidate_pixels": 3806,
+  "training_pixels": 4549,
+  "deep_Rrs": [
+    0.019681887701153755,
+    0.0206465907394886,
+    0.01635551266372204,
+    0.01402498222887516
+  ],
+  "median_depth_m": 2.049999952316284,
+  "p05_depth_m": 1.0,
+  "p95_depth_m": 14.174999952316284,
+  "percent_depth_gt5m": 43.48397267472412,
+  "depth_boundary_percent": 0.8407777193904361,
+  "median_sand_fraction": 0.5799999833106995,
+  "median_Rrs_RMSE_sr-1": 0.0009886635234579444,
+  "p95_Rrs_RMSE_sr-1": 0.0020010300795547664,
+  "deep_fit_relative_rmse": 0.40118109036980404,
+  "decision": "EXPLORATORY ONLY \u2014 Sentinel-comparable geometry and scale; Planet deep-water/atmospheric reference remains unvalidated",
+  "no_cheating_checks": [
+    "No depth clipping in GeoTIFF",
+    "No spatial smoothing of inversion outputs",
+    "All four bands inverted jointly",
+    "Pixels >5 m retained; only displayed as black",
+    "Uncertain classification is explicit, not removed"
+  ],
+  "lut": {
+    "PGX": [
+      0.10864186717462568,
+      7.565108913990388e-13,
+      0.03494033036832431
+    ],
+    "deep_fit_relative_rmse": 0.40118109036980404,
+    "deep_observed_Rrs": [
+      0.019681887701153755,
+      0.0206465907394886,
+      0.01635551266372204,
+      0.01402498222887516
+    ],
+    "deep_modeled_Rrs": [
+      0.017931338338863435,
+      0.02095867046887212,
+      0.01976481081096811,
+      0.003232171047034527
+    ],
+    "aw": [
+      0.007278,
+      0.01592,
+      0.06526,
+      0.431
+    ],
+    "bbw": [
+      0.0024150250898000002,
+      0.0015500469916,
+      0.0008460792322,
+      0.00041893486240000003
+    ],
+    "sand_reflectance": [
+      0.3316,
+      0.3854,
+      0.47819999999999996,
+      0.5758
+    ],
+    "seagrass_reflectance": [
+      0.042864,
+      0.042092,
+      0.078156,
+      0.03982
+    ],
+    "lut_entries": 20301,
+    "depth_grid_m": [
+      0.0,
+      20.0,
+      0.1
+    ],
+    "sand_fraction_grid": [
+      0.0,
+      1.0,
+      0.01
+    ]
+  },
+  "created_utc": "2026-09-23T01:37:10.473013+00:00"
+}

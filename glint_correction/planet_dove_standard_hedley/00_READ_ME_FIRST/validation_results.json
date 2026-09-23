@@ -1,0 +1,56 @@
+{
+  "package": "C:\\Users\\phili\\Documents\\ChatGPT\\ACOLITE-Glint Correction\\2026_PCIS_Project\\glint_correction\\planet_dove_standard_hedley",
+  "ok": true,
+  "errors": [],
+  "scene_count": 4,
+  "raster_checks": [
+    {
+      "file": "C:\\Users\\phili\\Documents\\ChatGPT\\ACOLITE-Glint Correction\\2026_PCIS_Project\\glint_correction\\planet_dove_standard_hedley\\04_GENERATED_OUTPUT\\2025-10-18\\04_Corrected_SR\\2025-10-18_Planet_Standard_Hedley_SR_8b.tif",
+      "finite_minima_444_707": [
+        -0.007665276527404785,
+        -0.0016326531767845154,
+        -0.00019093602895736694,
+        -0.002019234001636505,
+        -0.03807107359170914,
+        -0.047015707939863205,
+        -0.048198796808719635
+      ]
+    },
+    {
+      "file": "C:\\Users\\phili\\Documents\\ChatGPT\\ACOLITE-Glint Correction\\2026_PCIS_Project\\glint_correction\\planet_dove_standard_hedley\\04_GENERATED_OUTPUT\\2025-11-17\\04_Corrected_SR\\2025-11-17_Planet_Standard_Hedley_SR_8b.tif",
+      "finite_minima_444_707": [
+        -0.06376636773347855,
+        -0.05266045778989792,
+        -0.037490881979465485,
+        -0.03178710490465164,
+        -0.04973448067903519,
+        -0.05337532237172127,
+        -0.05798906087875366
+      ]
+    },
+    {
+      "file": "C:\\Users\\phili\\Documents\\ChatGPT\\ACOLITE-Glint Correction\\2026_PCIS_Project\\glint_correction\\planet_dove_standard_hedley\\04_GENERATED_OUTPUT\\2026-06-20\\04_Corrected_SR\\2026-06-20_Planet_Standard_Hedley_SR_8b.tif",
+      "finite_minima_444_707": [
+        -0.0735294371843338,
+        -0.07307328283786774,
+        -0.028299391269683838,
+        -0.03736905753612518,
+        -0.031000405550003052,
+        -0.03470804914832115,
+        -0.01791246607899666
+      ]
+    },
+    {
+      "file": "C:\\Users\\phili\\Documents\\ChatGPT\\ACOLITE-Glint Correction\\2026_PCIS_Project\\glint_correction\\planet_dove_standard_hedley\\04_GENERATED_OUTPUT\\2026-06-27\\04_Corrected_SR\\2026-06-27_Planet_Standard_Hedley_SR_8b.tif",
+      "finite_minima_444_707": [
+        -0.2598804831504822,
+        -0.24045948684215546,
+        -0.25302034616470337,
+        -0.24892741441726685,
+        -0.20643025636672974,
+        -0.2221931517124176,
+        -0.12894541025161743
+      ]
+    }
+  ]
+}

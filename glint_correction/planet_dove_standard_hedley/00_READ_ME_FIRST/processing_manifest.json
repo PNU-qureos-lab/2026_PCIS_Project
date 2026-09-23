@@ -1,0 +1,30 @@
+{
+  "title": "Tidung Planet SuperDove standard Hedley processing",
+  "created_by": "process_planetscope_standard_hedley.py",
+  "input": "H:\\PlanetDove\\1.tidung_benthic_destroy_psscene_analytic_8b_sr_udm2.zip",
+  "input_product": "Planet ortho_analytic_8b_sr",
+  "atmospheric_correction": "Planet Surface Reflectance (6S); ACOLITE was not rerun",
+  "method": "Hedley et al. (2005) standard equation",
+  "scene_count": 4,
+  "dates": [
+    "2025-10-18",
+    "2025-11-17",
+    "2026-06-20",
+    "2026-06-27"
+  ],
+  "formula": "rho_corrected(lambda) = rho(lambda) - b(lambda) * (rho866 - min_training_rho866)",
+  "custom_safeguards": false,
+  "negative_clipping": false,
+  "corrected_bands_nm": [
+    444,
+    492,
+    533,
+    566,
+    612,
+    666,
+    707
+  ],
+  "unchanged_reference_band_nm": 866,
+  "mask": "UDM2 clear and finite in all eight bands; fixed land excluded using the four-date 25th-percentile 866 nm (>0.08) and median NDVI (>0.02). Bright glinted water is retained rather than rejected by a per-date NIR threshold.",
+  "reference": "Hedley JD, Harborne AR, Mumby PJ (2005), DOI 10.1080/01431160500034086"
+}
