@@ -7,6 +7,7 @@ from pathlib import Path
 
 import numpy as np
 import rasterio
+from rasterio.warp import transform_bounds
 
 ROOT = Path(__file__).resolve().parents[1]
 SENTINEL_SOURCE = ROOT.parent / "tiding_sentinel_v3" / "results_v3"
@@ -16,10 +17,10 @@ PRODUCTS = ("depth_m", "sand_fraction", "seagrass_fraction", "habitat")
 def raster_payload(path: Path) -> dict:
     with rasterio.open(path) as src:
         values = src.read(1).astype("<f4", copy=False)
-        bounds = src.bounds
+        bounds = transform_bounds(src.crs, "EPSG:4326", *src.bounds, densify_pts=21)
     return {
         "width": int(values.shape[1]), "height": int(values.shape[0]),
-        "extent": [bounds.left, bounds.bottom, bounds.right, bounds.top],
+        "extent": list(bounds),
         "data": base64.b64encode(values.tobytes()).decode("ascii"),
     }
 
