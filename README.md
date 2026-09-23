@@ -94,6 +94,7 @@ maps with legends.
 - [Glint-correction methods and results](glint_correction.html)
 - [Semi-analytical concept](semi_analytical_concept.html)
 - [Combined Sentinel-2 and Planet Dove results viewer](semi_analytical_map.html)
+- [Standalone results viewer](semi_analytical_map_standalone.html) — download this single HTML file and open it directly.
 
 ## Code and reproducible packages
 
