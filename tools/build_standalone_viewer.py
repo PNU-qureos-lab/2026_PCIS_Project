@@ -34,15 +34,13 @@ def main() -> None:
     scripts = {
         "vendor/leaflet.js": (ROOT / "vendor" / "leaflet.js").read_text(encoding="utf-8"),
         "semi_previews/manifest.js": inline_manifest("semi_previews/manifest.js"),
-        "planet_previews/manifest.js": inline_manifest("planet_previews/manifest.js"),
         "viewer_data/sentinel_values.js": (ROOT / "viewer_data" / "sentinel_values.js").read_text(encoding="utf-8"),
-        "viewer_data/planet_values.js": (ROOT / "viewer_data" / "planet_values.js").read_text(encoding="utf-8"),
         "tools/export_map.js": (ROOT / "tools" / "export_map.js").read_text(encoding="utf-8-sig"),
     }
     for source, script in scripts.items():
         html = html.replace(f'<script src="{source}"></script>', f"<script>{script}</script>")
 
-    html = html.replace("Satellite semi-analytical results viewer</title>", "Satellite semi-analytical results viewer — standalone</title>")
+    html = html.replace("Satellite semi-analytical results viewer</title>", "Sentinel-2 semi-analytical results viewer — standalone</title>")
     OUTPUT.write_text(html, encoding="utf-8", newline="\n")
     print(f"Wrote {OUTPUT.name} ({OUTPUT.stat().st_size / 1024 / 1024:.1f} MiB)")
 
