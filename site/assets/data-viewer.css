@@ -1,4 +1,4 @@
-.map-layout { grid-template-columns: 390px minmax(0, 1fr); }
+.map-layout { grid-template-columns: 390px minmax(0, 1fr); margin-bottom: 24px; }
 .dataset-summary {
   margin: 0 0 24px;
   padding: 20px;

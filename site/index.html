@@ -42,6 +42,25 @@
     </section>
     <section id="map-panel" class="panel">
       <div class="section-heading"><div><p class="kicker">Satellite data</p><h2>Scene Inventory</h2></div><p>One scene is one satellite image. The tables describe the complete delivery package. Raw satellite scenes are not stored in this public GitHub repository.</p></div>
+      <section class="map-layout" aria-labelledby="data-viewer-title">
+        <aside class="data-map-sidebar">
+          <p class="kicker">Interactive map</p><h3 id="data-viewer-title">Data Viewer</h3>
+          <label>Study area<select id="map-site"></select></label>
+          <button id="map-zoom-site" class="map-zoom-button" type="button">Zoom to selected location</button>
+          <div id="map-facts" class="facts"></div>
+          <div class="data-preview-panel">
+            <h3>Satellite preview</h3>
+            <p class="preview-instruction small">Choose a satellite, scene and image layer. The selected preview is displayed on the map.</p>
+            <label>Satellite<select id="map-preview-sensor"></select></label>
+            <label>Scene<select id="map-preview-scene" disabled></select></label>
+            <label>Image layer<select id="map-preview-product" disabled></select></label>
+            <label>Overlay opacity<input id="map-overlay-opacity" type="range" min="0.15" max="1" step="0.05" value="1"></label>
+            <div id="map-preview-caption" class="map-preview-status">Select a satellite to display its image.</div>
+            <a id="map-preview-open" class="button-link map-preview-open" href="#" target="_blank" rel="noopener" hidden>Open full-size preview</a>
+          </div>
+        </aside>
+        <div id="map" role="img" aria-label="Map showing the selected satellite preview"></div>
+      </section>
       <section class="sentinel-scene-record" aria-labelledby="sentinel-record-title">
         <div class="dataset-summary-heading"><div><p class="kicker">Sentinel-2</p><h3 id="sentinel-record-title">Sentinel-2 Scenes by Location</h3></div><p>The available inventory contains 1,926 scenes. Four complete L2A example scenes are included in this package.</p></div>
         <div id="sentinel-record-metrics" class="data-summary-metrics"></div>
@@ -55,7 +74,6 @@
         <div class="table-wrap dataset-summary-table"><table><thead><tr><th>Country</th><th>Location</th><th>Number of scenes</th><th>Package size</th></tr></thead><tbody id="planet-location-summary"></tbody><tfoot id="planet-location-total"></tfoot></table></div>
         <details open class="planet-scene-list"><summary>Show all 35 Planet Dove scenes</summary><div class="table-wrap"><table><thead><tr><th>No.</th><th>Country</th><th>Location</th><th>Date</th><th>Scene name</th></tr></thead><tbody id="planet-scene-rows"></tbody></table></div></details>
       </section>
-      <div hidden aria-hidden="true"><select id="map-site"></select><button id="map-zoom-site"></button><div id="map-facts"></div><select id="map-preview-sensor"></select><select id="map-preview-scene"></select><select id="map-preview-product"></select><input id="map-overlay-opacity" type="range"><span id="map-preview-caption"></span><a id="map-preview-open"></a><div id="map"></div></div>
     </section>
     <section id="catalog" class="panel">
       <div class="section-heading"><div><p class="kicker">Data inventory</p><h2>Scientific Data Catalog</h2></div><p>Filters operate on the generated data inventory. Click an image, HTML, Markdown, CSV or JSON file to open it locally.</p></div>
@@ -97,6 +115,6 @@
     </section>
   </main>
   <footer>PCIS 2026 Satellite Bathymetry Project · Public documentation and result previews</footer>
-  <script src="assets/data_inventory.js?v=20261029p"></script><script src="assets/site_data.js?v=20261029j"></script><script src="assets/result_layers.js?v=20261029f"></script><script src="assets/sentinel2_record.js?v=20261029b"></script><script src="assets/planet_dove_record.js?v=20261029a"></script><script src="assets/viewer.js?v=20261029p"></script>
+  <script src="vendor/leaflet.js"></script><script src="assets/data_inventory.js?v=20261029p"></script><script src="assets/site_data.js?v=20261029j"></script><script src="assets/data_layers.js?v=20261030a"></script><script src="assets/result_layers.js?v=20261029f"></script><script src="assets/sentinel2_record.js?v=20261029b"></script><script src="assets/planet_dove_record.js?v=20261029a"></script><script src="assets/viewer.js?v=20261030a"></script>
 </body>
 </html>
