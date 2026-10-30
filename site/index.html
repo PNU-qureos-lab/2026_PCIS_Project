@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PCIS 2026 Satellite Bathymetry Workflow</title>
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="assets/style.css?v=20261029c">
+  <link rel="stylesheet" href="assets/results.css?v=20261029f">
+  <link rel="stylesheet" href="assets/data-viewer.css?v=20261029k">
+  <style>
+    .leaflet-control-layers-toggle{background-image:none!important;width:auto!important;height:auto!important;padding:8px 10px!important;text-decoration:none}
+    .leaflet-control-layers-toggle::after{content:"Layers";font:700 12px "Segoe UI",Arial,sans-serif;color:#143a47}
+    .panel.active+.panel.active{margin-top:48px;padding-top:36px;border-top:1px solid var(--line)}
+    .method-qc{margin-top:24px;background:#fff7e6;border-left:5px solid var(--amber);border-radius:10px;padding:18px}
+    .method-qc ul{columns:2;gap:32px}.method-qc li{margin:8px 0;break-inside:avoid}
+    .workflow-overview{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin:0 0 24px;box-shadow:var(--shadow)}
+    .workflow-flow{display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:8px 0 12px}.workflow-flow i{align-self:center;color:var(--teal);font-size:24px;font-style:normal}.flow-stage{min-width:170px;flex:1;background:var(--sky);border:1px solid #bdd5de;border-radius:10px;padding:12px}.flow-stage span{display:block;color:var(--teal);font-size:12px;font-weight:900;margin-bottom:5px}.flow-stage b{font-size:14px;line-height:1.35}.worked-example-heading{margin:28px 0 16px}.worked-example-heading h3{font-size:24px}.worked-example-heading p:last-child,.step-explanation{color:var(--muted);line-height:1.55}.step-explanation{font-size:14px}
+    .tree-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}.tree-toolbar button,.tree-toolbar input{border:1px solid #9cb8c2;border-radius:8px;background:#fff;padding:9px 12px}.tree-toolbar input{min-width:300px;flex:1}
+    .package-tree{height:68vh;overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px;font-family:Consolas,"Courier New",monospace;font-size:13px}
+    .package-tree details{margin-left:18px}.package-tree>details{margin-left:0}.package-tree summary{cursor:pointer;padding:5px 7px;border-radius:6px}.package-tree summary:hover{background:var(--sky)}.package-tree .tree-file{display:block;margin-left:40px;padding:3px 7px;color:#35545f}.package-tree .tree-file a{text-decoration:none}.package-tree small{color:var(--muted);font-family:"Segoe UI",Arial,sans-serif;margin-left:6px}
+    @media(max-width:1000px){.tabs{flex-wrap:wrap;overflow:visible}}
+    @media(max-width:720px){.method-qc ul{columns:1}.workflow-flow{display:grid;grid-template-columns:1fr;overflow:visible}.workflow-flow i{transform:rotate(90deg);justify-self:center}.flow-stage{min-width:0;width:100%}}
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div><p class="eyebrow">PCIS 2026</p><h1>Satellite Bathymetry Workflow</h1><p class="subtitle">Sentinel-2 and Planet Dove glint correction, semi-analytical processing, and mapped results</p></div>
+    <div class="header-badge"><span>Public project site</span><b id="header-count">Loading site…</b></div>
+  </header>
+  <nav class="tabs" aria-label="Portal sections">
+    <button class="active" data-tab="structure">1 · Package Structure</button><button data-tab="data">2 · Data</button><button data-tab="methods">3 · Methods</button><button data-tab="results">4 · Results</button>
+  </nav>
+  <main>
+    <section id="overview" class="panel active">
+      <div class="hero-grid">
+        <article class="intro-card"><p class="kicker">Processing scope</p><h2>Satellite Bathymetry Workflow</h2><p>This package documents the delivered datasets, study areas, processing inputs, intermediate products, quality-control records, and final results. The inventory links directly to the corresponding local files.</p><div class="pipeline"><span>L2A / Surface Reflectance</span><i>→</i><span>Glint Correction</span><i>→</i><span>Corrected Rrs</span><i>→</i><span>Deep-Water Rrs</span><i>→</i><span>Depth and Benthic Fractions</span></div></article>
+        <article class="status-card"><h3>Package contents</h3><ul><li>Seven organized top-level folders</li><li>Sentinel-2 and Planet Dove workflows</li><li>Code and GUI modes</li><li>Portable Python and offline wheels included</li></ul></article>
+      </div>
+      <div id="summary-metrics" class="metrics"></div><h2>Included Study Areas</h2><div id="site-cards" class="site-cards"></div>
+      <div class="callout"><b>Resolution is explicit:</b> Sentinel-2 processing is 20 m. Planet Dove glint correction and prepared v42 input are native 3 m. The complete pre-existing Tongatapu, Funafuti and Savave semi-analytical examples are clearly labelled 21 m.</div>
+    </section>
+    <section id="map-panel" class="panel">
+      <div class="section-heading"><div><p class="kicker">Satellite data</p><h2>Scene Inventory</h2></div><p>One scene is one satellite image. The tables describe the complete delivery package. Raw satellite scenes are not stored in this public GitHub repository.</p></div>
+      <section class="sentinel-scene-record" aria-labelledby="sentinel-record-title">
+        <div class="dataset-summary-heading"><div><p class="kicker">Sentinel-2</p><h3 id="sentinel-record-title">Sentinel-2 Scenes by Location</h3></div><p>The available inventory contains 1,926 scenes. Four complete L2A example scenes are included in this package.</p></div>
+        <div id="sentinel-record-metrics" class="data-summary-metrics"></div>
+        <div class="table-wrap dataset-summary-table"><table><thead><tr><th>Country</th><th>Location</th><th>Scenes available</th><th>Complete scenes in this package</th><th>Included scene date</th><th>Included size</th></tr></thead><tbody id="sentinel-location-summary"></tbody><tfoot id="sentinel-location-total"></tfoot></table></div>
+        <p class="dataset-summary-note">The Tuvalu inventory was recorded as one combined search for Funafuti and Savave, so its 476 scenes are not divided between those two locations. The package includes one complete Funafuti scene and no complete Savave Sentinel-2 scene.</p>
+        <div class="download-code-note"><div><b>Download additional Sentinel-2 scenes</b><p>Use <code>sentinel2_search_download.py</code>. It searches the Copernicus Data Space catalogue and downloads selected scenes.</p></div><div><a class="button-link" href="../code/01_SENTINEL2_DOWNLOAD/README.md">How to search and download</a><a class="button-link secondary" href="../code/01_SENTINEL2_DOWNLOAD/SOURCE/sentinel2_search_download.py">Open the Python code</a></div></div>
+      </section>
+      <section class="sentinel-scene-record" aria-labelledby="planet-record-title">
+        <div class="dataset-summary-heading"><div><p class="kicker">Planet Dove</p><h3 id="planet-record-title">All Planet Dove Scenes in This Package</h3></div><p>The package contains 35 Planet Dove scenes from four locations. Each scene includes surface-reflectance imagery; the supplied archives also contain the available masks.</p></div>
+        <div id="planet-record-metrics" class="data-summary-metrics"></div>
+        <div class="table-wrap dataset-summary-table"><table><thead><tr><th>Country</th><th>Location</th><th>Number of scenes</th><th>Package size</th></tr></thead><tbody id="planet-location-summary"></tbody><tfoot id="planet-location-total"></tfoot></table></div>
+        <details open class="planet-scene-list"><summary>Show all 35 Planet Dove scenes</summary><div class="table-wrap"><table><thead><tr><th>No.</th><th>Country</th><th>Location</th><th>Date</th><th>Scene name</th></tr></thead><tbody id="planet-scene-rows"></tbody></table></div></details>
+      </section>
+      <div hidden aria-hidden="true"><select id="map-site"></select><button id="map-zoom-site"></button><div id="map-facts"></div><select id="map-preview-sensor"></select><select id="map-preview-scene"></select><select id="map-preview-product"></select><input id="map-overlay-opacity" type="range"><span id="map-preview-caption"></span><a id="map-preview-open"></a><div id="map"></div></div>
+    </section>
+    <section id="catalog" class="panel">
+      <div class="section-heading"><div><p class="kicker">Data inventory</p><h2>Scientific Data Catalog</h2></div><p>Filters operate on the generated data inventory. Click an image, HTML, Markdown, CSV or JSON file to open it locally.</p></div>
+      <div class="filters"><input id="catalog-search" type="search" placeholder="Search scientific data by path, country, site, date or sensor"><select id="catalog-sensor"><option value="">All sensors</option><option>Sentinel-2</option><option>Planet Dove</option></select><select id="catalog-category"><option value="">All data groups</option></select></div>
+      <div id="catalog-summary" class="catalog-summary"></div><div class="table-wrap"><table><thead><tr><th>Data folder</th><th>Sensor</th><th>Country</th><th>Site</th><th>Date</th><th>File</th><th>Size</th></tr></thead><tbody id="catalog-body"></tbody></table></div>
+    </section>
+    <section id="workflow" class="panel">
+      <div class="section-heading"><div><p class="kicker">Processing methods</p><h2>Processing Stages and Quality Control</h2></div><p>Select a method. Each stage identifies its input and output and includes an example generated by the corresponding process.</p></div>
+      <div class="segmented"><button class="active" data-workflow="sentinel">Sentinel-2 glint</button><button data-workflow="planet">Planet Dove glint</button><button data-workflow="semi">Semi-analytical</button></div><div id="workflow-content"></div>
+    </section>
+    <section id="results" class="panel">
+      <div class="section-heading"><div><p class="kicker">Results</p><h2>Result Viewer</h2></div><p>View glint-correction outputs, deep-water references, depth, benthic fractions, benthic classes, and model QC maps.</p></div>
+      <article class="result-explorer">
+        <aside class="result-sidebar">
+          <div class="result-controls"><label>Sensor<select id="result-sensor-filter"></select></label><label>Scene / date<select id="result-site"></select></label><label>Map<select id="result-product"></select></label></div>
+          <div class="result-navigation"><button id="result-prev" type="button">Previous</button><button id="result-next" type="button">Next</button></div>
+          <label class="zoom-control">Figure zoom<input id="result-zoom" type="range" min="1" max="3" step="0.1" value="1"></label>
+          <p id="result-sensor" class="pill"></p><h3 id="result-title"></h3><p id="result-resolution"></p>
+          <div id="result-legend" class="result-legend"></div>
+          <a id="result-open" class="button-link" href="#">Open full-size figure</a>
+        </aside>
+        <div class="image-stage"><img id="result-image" alt="Selected result"></div>
+      </article>
+    </section>
+    <section id="specifications" class="panel">
+      <div class="section-heading"><div><p class="kicker">Input requirements</p><h2>Data Specifications</h2></div><p>Expected sensor products, spatial resolutions, masks, reference data and principal outputs.</p></div>
+      <div class="spec-grid">
+        <article><h3>Sentinel-2 MSI</h3><dl><dt>Input</dt><dd>Level-2A bottom-of-atmosphere reflectance</dd><dt>Processing grid</dt><dd>20 m</dd><dt>Glint support</dt><dd>SWIR selection, transferred glint factors, HydroLight evidence</dd><dt>Primary output</dt><dd>Corrected BOA, above-surface Rrs, below-surface rrs and QC</dd></dl></article>
+        <article><h3>Planet Dove / SuperDove</h3><dl><dt>Input</dt><dd>Eight-band analytic surface reflectance + UDM2</dd><dt>Glint resolution</dt><dd>Native 3 m</dd><dt>Method</dt><dd>Standard Hedley using 866 nm and reviewed offshore training water</dd><dt>Primary output</dt><dd>Corrected SR, approximate Rrs, masks, slopes/R² and QC</dd></dl></article>
+        <article><h3>Reference data</h3><dl><dt>Bathymetry</dt><dd>Official GEBCO 2026 site subsets</dd><dt>Optical library</dt><dd>HydroLight reference spectra</dd><dt>Deep water</dt><dd>GEBCO ≥30 m, ≥1.5 km from land, 7×7 ROIs, visible CV ≤5%</dd><dt>Masking</dt><dd>Land, cloud, invalid water and shallow/deep selection masks</dd></dl></article>
+        <article><h3>Semi-analytical v42</h3><dl><dt>Input</dt><dd>Corrected Rrs + masks + deep-water Rrs + sensor configuration</dd><dt>Outputs</dt><dd>Depth, sand/seagrass or multi-bottom fractions, status/habitat and relative RMS</dd><dt>Maps</dt><dd>GeoTIFF scientific rasters plus titled PNG figures with legends</dd></dl></article>
+      </div>
+    </section>
+    <section id="structure" class="panel">
+      <div class="section-heading"><div><p class="kicker">Package organization</p><h2>Directory and File Structure</h2></div><p>Expand a folder to inspect its subfolders and files. The tree is generated from the complete delivery inventory.</p></div>
+      <div class="tree-toolbar"><button id="tree-expand-top" type="button">Expand top-level folders</button><button id="tree-collapse" type="button">Collapse all</button><input id="tree-search" type="search" placeholder="Search the package tree"></div>
+      <div id="package-tree" class="package-tree" role="tree" aria-label="Complete package directory tree"></div>
+      <div class="handoff-links"><a href="../README.md">Project README</a><a href="../code/README.md">Code instructions</a><a href="https://github.com/PNU-qureos-lab/2026_PCIS_Project">GitHub repository</a></div>
+    </section>
+  </main>
+  <footer>PCIS 2026 Satellite Bathymetry Project · Public documentation and result previews</footer>
+  <script src="assets/data_inventory.js?v=20261029p"></script><script src="assets/site_data.js?v=20261029j"></script><script src="assets/result_layers.js?v=20261029f"></script><script src="assets/sentinel2_record.js?v=20261029b"></script><script src="assets/planet_dove_record.js?v=20261029a"></script><script src="assets/viewer.js?v=20261029p"></script>
+</body>
+</html>

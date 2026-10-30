@@ -1,3 +1,43 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2026 PCIS Project</title><style>
-:root{font-family:Arial,sans-serif;color:#173047;background:#f3f7fa}*{box-sizing:border-box}body{margin:0}header{background:#123c60;color:#fff;padding:28px max(24px,calc((100vw - 1050px)/2))}header h1{margin:0 0 7px;font-size:1.9rem}header p{margin:0;color:#d7edf7}main{max-width:1050px;margin:30px auto;padding:0 20px}.intro{margin-bottom:24px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{display:block;background:#fff;border:1px solid #d9e5ec;border-radius:12px;padding:22px;color:#173047;text-decoration:none;box-shadow:0 2px 8px #123c6010}.card:hover{border-color:#168eaa;box-shadow:0 5px 15px #123c6020}.card h2{font-size:1.15rem;margin:0 0 9px;color:#0767a4}.card p{margin:0;line-height:1.45;color:#527080}.download{margin-top:24px;padding:18px 22px;background:#e9f5f8;border-left:4px solid #168eaa}.download a{color:#0767a4;font-weight:bold}@media(max-width:700px){.grid{grid-template-columns:1fr}}
-</style></head><body><header><h1>2026 PCIS Project</h1><p>Satellite processing, correction, and shallow-water modelling</p></header><main><section class="intro"><h2>Project pages</h2><p>Choose one page below. The results viewer currently presents Sentinel-2 products for review.</p></section><section class="grid"><a class="card" href="inventory.html"><h2>1. Satellite inventory</h2><p>Browse available Sentinel-2 and Planet Dove scenes and product information.</p></a><a class="card" href="glint_correction.html"><h2>2. Glint correction</h2><p>Review the ACOLITE, HydroLight, and Hedley correction workflows and results.</p></a><a class="card" href="semi_analytical_concept.html"><h2>3. Semi-analytical concept</h2><p>Follow the HOPE/D2 model workflow, inputs, calculations, and outputs.</p></a><a class="card" href="semi_analytical_map.html"><h2>4. Sentinel-2 results viewer</h2><p>Select a scene and product, click individual grid cells, and export a map with its legend.</p></a></section><section class="download"><a href="semi_analytical_map_standalone.html" download>Download the standalone Sentinel-2 viewer</a><p>One HTML file containing the result overlays and pixel values.</p></section></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PCIS 2026 Satellite Bathymetry</title>
+  <style>
+    :root{--ink:#12313d;--teal:#0b7180;--sky:#eaf5f7;--line:#bed4da;--gold:#e5a33e}
+    *{box-sizing:border-box}body{margin:0;font:16px/1.55 "Segoe UI",Arial,sans-serif;color:var(--ink);background:#f4f8f9}
+    header{padding:64px max(6vw,24px);background:linear-gradient(125deg,#082d39,#0b7180);color:#fff}
+    header p{max-width:760px;font-size:19px}h1{margin:0 0 12px;font-size:clamp(34px,5vw,62px);line-height:1.08}
+    main{max-width:1180px;margin:0 auto;padding:42px 24px 70px}.intro{max-width:820px;margin-bottom:28px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+    .card{display:block;padding:24px;border:1px solid var(--line);border-radius:14px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 8px 26px #17404d12;transition:.15s ease}
+    .card:hover{border-color:var(--teal);transform:translateY(-2px)}.card b{display:block;color:var(--teal);font-size:20px;margin-bottom:6px}
+    .note{margin-top:28px;padding:18px 20px;border-left:5px solid var(--gold);background:#fff8ea;border-radius:8px}
+    footer{padding:24px;text-align:center;color:#58717a}
+  </style>
+</head>
+<body>
+  <header>
+    <p>PCIS 2026</p>
+    <h1>Satellite Bathymetry Workflow</h1>
+    <p>Sentinel-2 and Planet Dove glint correction, corrected remote-sensing reflectance, semi-analytical processing, and mapped results.</p>
+  </header>
+  <main>
+    <section class="intro">
+      <h2>Project website</h2>
+      <p>Open a section below. The public repository contains documentation, lightweight preview figures, result maps, and the processing code. Large source satellite files are distributed separately.</p>
+    </section>
+    <section class="grid" aria-label="Project sections">
+      <a class="card" href="site/index.html#tab-data"><b>Data Inventory</b><span>Scene counts, locations, dates, sensor specifications, and package coverage.</span></a>
+      <a class="card" href="site/index.html#methods-sentinel"><b>Sentinel-2 Glint Correction</b><span>ACOLITE Cycle 0, residual-glint review, conditional Cycle 1, Rrs, and quality control.</span></a>
+      <a class="card" href="site/index.html#methods-planet"><b>Planet Dove Glint Correction</b><span>Hedley training-water selection, regression fitting, correction, Rrs, and quality control.</span></a>
+      <a class="card" href="site/index.html#methods-semi"><b>Semi-analytical Processing</b><span>Deep-water Rrs selection, optical initialization, depth, bottom fractions, and model checks.</span></a>
+      <a class="card" href="site/index.html#tab-results"><b>Result Viewer</b><span>Sentinel-2 and Planet Dove depth, sand, seagrass, benthic, and status maps.</span></a>
+      <a class="card" href="https://github.com/PNU-qureos-lab/2026_PCIS_Project/tree/main/code"><b>Processing Code</b><span>Small code-only distribution for the complete workflow; raw satellite data are not stored in GitHub.</span></a>
+    </section>
+    <p class="note"><b>Data notice:</b> The public repository does not include the large Sentinel-2 source scenes or licensed Planet Dove source imagery. Use the separate delivery package for complete example inputs and reproducible runs.</p>
+  </main>
+  <footer>PCIS 2026 Satellite Bathymetry Project</footer>
+</body>
+</html>

@@ -1,104 +1,48 @@
-# 2026 PCIS Project
+# PCIS 2026 Satellite Bathymetry Workflow
 
-Satellite imagery inventory, glint correction, and semi-analytical shallow-water modelling for the Pacific Island project.
+This repository provides the public project website and the compact processing-code distribution for:
 
-## End-to-end workflow
+- Sentinel-2 glint correction using the ACOLITE-based Cycle 0 / conditional Cycle 1 workflow.
+- Planet Dove glint correction using the Standard Hedley method.
+- Corrected remote-sensing reflectance (Rrs) preparation.
+- Semi-analytical Version 42 processing for depth and benthic fractions.
 
-Follow the diagram from the satellite inputs to the final depth and habitat
-products. The sections below the diagram explain each stage in the same order.
+## Public website
 
-```mermaid
-flowchart TD
-    A[Sentinel-2 L2A scene<br/>BOA reflectance bands] --> D[Prepare all bands on<br/>one 20 m grid]
-    B[ACOLITE glint products<br/>B11/B12 selection, rhog_ref<br/>and transfer factors] --> E[Glint correction<br/>Cycle 0]
-    C[HydroLight water-only<br/>simulation library] --> F[Deep-water residual<br/>validation]
-    D --> E
-    E --> F
-    F --> G{Is an additional<br/>Cycle 1 correction needed?}
-    G -->|Yes| H[Cycle 1 candidate<br/>fit remaining ACOLITE-shaped glint<br/>and subtract the accepted amount]
-    G -->|No| I[Keep the Cycle 0 result]
-    H --> J[Final corrected BOA]
-    I --> J
-    J --> K[Convert to above-water Rrs<br/>B01, B02, B03 and B04]
-    K --> L[Select valid pixels with<br/>the shallow-water mask]
-    M[Deep-water Rrs, solar angle<br/>and pure-water coefficients] --> N[HOPE initialization<br/>estimate P, G and X]
-    O[Coral-sand and<br/>seagrass spectra] --> P[D2 candidate generation<br/>and optimization]
-    L --> P
-    N --> P
-    P --> Q[Select the solution<br/>with minimum C4]
-    Q --> R[Estimated water depth]
-    Q --> S[Sand and seagrass fractions]
-    Q --> T[Habitat class]
-    Q --> U[Model cost and<br/>processing status]
-    R --> V[GeoTIFF products and<br/>result maps with legends]
-    S --> V
-    T --> V
-    U --> V
+After GitHub Pages is enabled for the `main` branch, the project website is available at:
+
+<https://pnu-qureos-lab.github.io/2026_PCIS_Project/>
+
+Direct sections:
+
+- [Data inventory](https://pnu-qureos-lab.github.io/2026_PCIS_Project/site/index.html#tab-data)
+- [Sentinel-2 glint correction](https://pnu-qureos-lab.github.io/2026_PCIS_Project/site/index.html#methods-sentinel)
+- [Planet Dove glint correction](https://pnu-qureos-lab.github.io/2026_PCIS_Project/site/index.html#methods-planet)
+- [Semi-analytical processing](https://pnu-qureos-lab.github.io/2026_PCIS_Project/site/index.html#methods-semi)
+- [Result viewer](https://pnu-qureos-lab.github.io/2026_PCIS_Project/site/index.html#tab-results)
+
+## Repository structure
+
+```text
+2026_PCIS_Project/
+|-- index.html                  Public landing page
+|-- site/                       Interactive inventory, methods, and results
+|   |-- index.html
+|   |-- assets/
+|   `-- vendor/
+|-- code/                       Compact code-only workflow
+|   |-- 01_SENTINEL2_DOWNLOAD/
+|   |-- 02_SENTINEL2_GLINT_CORRECTION/
+|   |-- 03_PLANET_DOVE_GLINT_CORRECTION/
+|   |-- 04_SEMI_ANALYTICAL_V42/
+|   `-- 05_SHARED_UTILITIES/
+`-- README.md
 ```
 
-## Processing stages
+## Run the code
 
-### 1. Satellite and supporting inputs
+Start with [`code/README.md`](code/README.md). Each numbered workflow folder contains its own README with required inputs and example commands.
 
-The workflow begins with Sentinel-2 L2A bottom-of-atmosphere reflectance. The
-supporting inputs are the ACOLITE glint products, HydroLight water-only spectra,
-a shallow-water mask, pure-water optical coefficients, and coral-sand and
-seagrass spectra.
+The code is included without raw satellite data. Large Sentinel-2 source scenes, licensed Planet Dove imagery, complete intermediate outputs, and the portable offline Python environment are distributed in the separate delivery package.
 
-### 2. ACOLITE glint correction: Cycle 0
-
-The Sentinel-2 bands are aligned on one 20 m grid. ACOLITE provides the B11/B12
-selection, `rhog_ref`, and band-transfer factors. These values estimate the
-surface-glint contribution in every optical band. Subtracting that estimate from
-the original BOA reflectance produces Cycle 0.
-
-### 3. HydroLight validation and the Cycle 1 decision
-
-HydroLight spectra represent plausible water-only signals. The workflow
-compares them with deep-water Cycle-0 spectra to test whether an
-ACOLITE-shaped residual remains. Cycle 1 fits that residual to the original
-ACOLITE glint spectral shape and subtracts only a detected, spatially coherent
-component. It is a conditional Python calculation rather than another ACOLITE
-run. The result is retained only when every validation gate passes.
-
-The included scene did not pass the Cycle 1 scene gate. Its final
-glint-corrected product therefore remains Cycle 0.
-
-### 4. HOPE water-column initialization
-
-**HOPE** means **Hyperspectral Optimization Process Exemplar**. It is a
-physics-based semi-analytical method introduced by Lee and co-authors. Here,
-HOPE fits the deep-water spectrum and estimates `P` for phytoplankton
-absorption, `G` for dissolved and detrital absorption, and `X` for particle
-backscattering. These parameters describe the water column for the next stage.
-
-### 5. D2 shallow-water inversion
-
-**D2** is the configuration label used in the supplied code for the Lee
-shallow-water forward model. It predicts the water-column and bottom
-contributions to the measured reflectance. The inversion changes water depth
-and the sand–seagrass mixture until the modeled four-band reflectance best
-matches Sentinel-2. `D2` is a model label in this implementation, not a separate
-acronym.
-
-### 6. Final outputs
-
-The solution with the lowest four-band spectral mismatch (`C4`) supplies the
-estimated depth, sand fraction, seagrass fraction, habitat class, model cost,
-and processing status. The workflow exports these products as GeoTIFF files and
-maps with legends.
-
-## Project resources
-
-- [Satellite inventory](inventory.html)
-- [Glint-correction methods and results](glint_correction.html)
-- [Semi-analytical concept](semi_analytical_concept.html)
-- [Sentinel-2 results viewer](semi_analytical_map.html)
-- [Standalone Sentinel-2 results viewer](semi_analytical_map_standalone.html) — download this single HTML file and open it directly.
-
-## Code and reproducible packages
-
-- [`glint_correction/`](glint_correction/) separates the Sentinel-2 ACOLITE workflow and the Planet Dove Hedley workflow.
-- [`semi_analytical/`](semi_analytical/) separates the Sentinel-2 and Planet Dove inversion packages.
-
-Download the repository ZIP, extract the complete folder, and open `index.html` to use the interactive pages. Keep all asset folders beside the HTML files.
+Scientific reference tables and configuration files required by the processing code remain included. Generated preview PNG files used by the website are lightweight visual products, not raw satellite scenes.

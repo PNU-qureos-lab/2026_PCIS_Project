@@ -1,0 +1,51 @@
+name: Publish project website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - site/**
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website files
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            index.html
+            site
+          sparse-checkout-cone-mode: false
+      - name: Prepare static site
+        run: |
+          mkdir _site
+          cp index.html _site/index.html
+          cp -R site _site/site
+          touch _site/.nojekyll
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
