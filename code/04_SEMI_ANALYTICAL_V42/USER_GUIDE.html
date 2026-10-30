@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Semi-Analytical Processing (Version 42) — User Guide</title>
+  <style>
+    :root{font-family:Segoe UI,Arial,sans-serif;color:#16323b;background:#eef4f5}
+    body{max-width:980px;margin:0 auto;padding:32px 20px 64px;line-height:1.6}
+    header,section{background:#fff;border:1px solid #cfdddf;border-radius:14px;padding:24px;margin:0 0 18px}
+    h1,h2{color:#0c5962;margin-top:0} code{background:#edf3f4;padding:2px 6px;border-radius:5px}
+    .step{border-left:5px solid #14828d;padding-left:16px}.note{background:#e8f5f4;border-color:#acd8d5}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Semi-Analytical Processing (Version 42)</h1>
+  <p>Portable English guide for the Sentinel-2 20 m and Planet Dove native 3 m semi-analytical application.</p>
+</header>
+<section class="note">
+  <h2>Start here</h2>
+  <p>Run <code>RUN_GUI.bat</code> in the package root and select option 3. The launcher detects the package location automatically and creates the offline Python environment when required.</p>
+</section>
+<section>
+  <h2>Required inputs</h2>
+  <ul>
+    <li>Glint-corrected Rrs bands for the selected sensor.</li>
+    <li>A valid-water or analysis mask on the same grid.</li>
+    <li>GEBCO depth data for deep-water reference selection.</li>
+    <li>Two or three bottom-reflectance spectra from the packaged library.</li>
+    <li>Solar zenith angle and the required sensor/water-case settings.</li>
+  </ul>
+</section>
+<section>
+  <h2>Guided workflow</h2>
+  <p class="step"><strong>1. Analysis settings:</strong> select Sentinel-2 or Planet Dove, the water case, output folder, and processing settings.</p>
+  <p class="step"><strong>2. Image and deep water:</strong> select the corrected Rrs data and mask, then review or create the deep-water reference.</p>
+  <p class="step"><strong>3. Bottom selection:</strong> choose two or three packaged bottom spectra.</p>
+  <p class="step"><strong>4. Run and results:</strong> validate all inputs, start the calculation, follow progress, and open the saved result folder.</p>
+</section>
+<section>
+  <h2>Saved products</h2>
+  <p>The workflow saves georeferenced depth, bottom fractions, the selected bottom combination, status and quality layers, tabular pixel results, provenance, preview maps, and an HTML result summary. Scientific raster values are stored in GeoTIFF files.</p>
+</section>
+<section>
+  <h2>Full package documentation</h2>
+  <p>See <code>README.md</code> in the package root for exact command-line examples, folder paths, configuration instructions, GUI instructions, and the local data/results portal.</p>
+</section>
+</body>
+</html>
