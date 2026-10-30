@@ -88,14 +88,14 @@
       <div class="section-heading"><div><p class="kicker">Results</p><h2>Result Viewer</h2></div><p>View glint-correction outputs, deep-water references, depth, benthic fractions, benthic classes, and model QC maps.</p></div>
       <article class="result-explorer">
         <aside class="result-sidebar">
-          <div class="result-controls"><label>Sensor<select id="result-sensor-filter"></select></label><label>Scene / date<select id="result-site"></select></label><label>Map<select id="result-product"></select></label></div>
+          <div class="result-controls"><label>Workflow<select id="result-workflow"></select></label><label>Satellite<select id="result-sensor-filter"></select></label><label>Scene / date<select id="result-site"></select></label><label>Map layer<select id="result-product"></select></label></div>
           <div class="result-navigation"><button id="result-prev" type="button">Previous</button><button id="result-next" type="button">Next</button></div>
-          <label class="zoom-control">Figure zoom<input id="result-zoom" type="range" min="1" max="3" step="0.1" value="1"></label>
+          <label class="zoom-control">Overlay opacity<input id="result-overlay-opacity" type="range" min="0.15" max="1" step="0.05" value="0.82"></label>
           <p id="result-sensor" class="pill"></p><h3 id="result-title"></h3><p id="result-resolution"></p>
           <div id="result-legend" class="result-legend"></div>
-          <a id="result-open" class="button-link" href="#">Open full-size figure</a>
+          <a id="result-open" class="button-link" href="#" target="_blank" rel="noopener">Open full-size source figure</a>
         </aside>
-        <div class="image-stage"><img id="result-image" alt="Selected result"></div>
+        <div id="result-map" role="img" aria-label="Selected result over an Esri basemap"></div>
       </article>
     </section>
     <section id="specifications" class="panel">
@@ -115,6 +115,6 @@
     </section>
   </main>
   <footer>PCIS 2026 Satellite Bathymetry Project · Public documentation and result previews</footer>
-  <script src="vendor/leaflet.js"></script><script src="assets/data_inventory.js?v=20261029p"></script><script src="assets/site_data.js?v=20261029j"></script><script src="assets/data_layers.js?v=20261030a"></script><script src="assets/result_layers.js?v=20261029f"></script><script src="assets/sentinel2_record.js?v=20261029b"></script><script src="assets/planet_dove_record.js?v=20261029a"></script><script src="assets/viewer.js?v=20261030a"></script>
+  <script src="vendor/leaflet.js"></script><script src="assets/data_inventory.js?v=20261029p"></script><script src="assets/site_data.js?v=20261029j"></script><script src="assets/data_layers.js?v=20261030b"></script><script src="assets/result_layers.js?v=20261030b"></script><script src="assets/sentinel2_record.js?v=20261029b"></script><script src="assets/planet_dove_record.js?v=20261029a"></script><script src="assets/viewer.js?v=20261030b"></script>
 </body>
 </html>
