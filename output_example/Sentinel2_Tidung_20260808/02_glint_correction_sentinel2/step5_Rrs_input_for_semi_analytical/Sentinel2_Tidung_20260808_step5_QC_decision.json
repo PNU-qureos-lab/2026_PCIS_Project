@@ -1,0 +1,20 @@
+{
+  "scene": "Sentinel2_Tidung_20260808",
+  "decision": "PASS",
+  "reasons": [],
+  "warnings": [],
+  "cloud_shadow_percent": 0.05,
+  "L2A_open_deep_water_median_BOA": {
+    "B03": 0.07580000162124634,
+    "B04": 0.0502999983727932
+  },
+  "valid_Rrs_pixels": 114216,
+  "negative_B02_percent": 0.0,
+  "median_glint_removed_BOA": {
+    "B01": 0.007547687739133835,
+    "B02": 0.009083942510187626,
+    "B03": 0.01056776475161314,
+    "B04": 0.011809952557086945
+  },
+  "SWIR_reference_B11_percent": 0.0
+}

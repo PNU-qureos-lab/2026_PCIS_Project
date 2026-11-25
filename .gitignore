@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+# Planet Dove imagery: not for public sharing (Planet licence) - it is in the PCIS Drive zip
+input_example/planetdove_SR_UDM2_delivery/
+output_example/PlanetDove_Tidung_20251117/

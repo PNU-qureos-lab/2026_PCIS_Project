@@ -1,0 +1,18 @@
+{
+  "sensor": "Sentinel2",
+  "water_type": "case1",
+  "coefficient_mode": "fitted",
+  "rrs_files": [
+    "/mnt/i/2026_PCIS_PROJECT/PCIS_2026_Linux_Pipeline_V42v2/output_example/Sentinel2_Tidung_20260808/02_glint_correction_sentinel2/step5_Rrs_input_for_semi_analytical/Sentinel2_Tidung_20260808_step5_Rrs_above_surface_4band_443-665nm_sr-1.tif"
+  ],
+  "deep_csv": "/mnt/i/2026_PCIS_PROJECT/PCIS_2026_Linux_Pipeline_V42v2/output_example/Sentinel2_Tidung_20260808/04_semi_analytical_bathymetry_habitat/step2_deep_water_Rrs_reference/Sentinel2_Tidung_20260808_step2_deep_water_Rrs_reference.csv",
+  "mask": "/mnt/i/2026_PCIS_PROJECT/PCIS_2026_Linux_Pipeline_V42v2/output_example/Sentinel2_Tidung_20260808/04_semi_analytical_bathymetry_habitat/step1_shallow_water_mask/Sentinel2_Tidung_20260808_step1_shallow_water_analysis_mask.tif",
+  "bottom_files": [
+    "/mnt/i/2026_PCIS_PROJECT/PCIS_2026_Linux_Pipeline_V42v2/support_04_semi_analytical_model_V42v2/DATA/bottom_reflectances/coral_sand.txt",
+    "/mnt/i/2026_PCIS_PROJECT/PCIS_2026_Linux_Pipeline_V42v2/support_04_semi_analytical_model_V42v2/DATA/bottom_reflectances/avg_seagrass.txt",
+    "/mnt/i/2026_PCIS_PROJECT/PCIS_2026_Linux_Pipeline_V42v2/support_04_semi_analytical_model_V42v2/DATA/bottom_reflectances/avg_coral.txt"
+  ],
+  "output_root": "/mnt/i/2026_PCIS_PROJECT/PCIS_2026_Linux_Pipeline_V42v2/output_example/Sentinel2_Tidung_20260808/04_semi_analytical_bathymetry_habitat/step4_model_3classes_sand_seagrass_coral/model_run_files",
+  "workers": 8,
+  "run_name": "3classes"
+}

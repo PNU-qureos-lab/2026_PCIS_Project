@@ -1,0 +1,9 @@
+## list of settings that will not be written in the NetCDF global attributes
+## e.g. credentials from various accounts
+EARTHDATA_u
+EARTHDATA_p
+EARTHEXPLORER_u
+EARTHEXPLORER_p
+EARTHEXPLORER_token
+CDSE_u
+CDSE_p

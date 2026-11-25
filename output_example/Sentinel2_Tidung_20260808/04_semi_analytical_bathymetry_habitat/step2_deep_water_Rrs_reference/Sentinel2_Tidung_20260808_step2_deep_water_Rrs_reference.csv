@@ -1,0 +1,2 @@
+scene,deep_Rrs_443_sr-1,deep_Rrs_490_sr-1,deep_Rrs_560_sr-1,deep_Rrs_665_sr-1,accepted_ROI_count,solar_zenith_deg,aggregation_method
+Sentinel2_Tidung_20260808,0.032025862485170364,0.027871552854776382,0.02069500833749771,0.01237550564110279,5,33.1765162268517,"median of 5 window medians; windows >= 2000 m from shallow/land, >= 1200 m apart, blue CV <= 0.05"

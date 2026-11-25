@@ -1,0 +1,18 @@
+# Conda environment for the PCIS pipeline (Linux). Create with:  bash setup_linux.sh
+name: pcis
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - scipy
+  - matplotlib
+  - rasterio            # GeoTIFF reading/writing (scripts 02-04)
+  - gdal                # used by rasterio and ACOLITE
+  - libgdal-jp2openjpeg # reads Sentinel-2 .jp2 bands
+  - libgdal-netcdf
+  - netcdf4             # ACOLITE look-up tables (.nc)
+  - pyproj
+  - requests            # script 01 (Copernicus download)
+  - openpyxl            # writes the step table (.xlsx)
+  - pillow

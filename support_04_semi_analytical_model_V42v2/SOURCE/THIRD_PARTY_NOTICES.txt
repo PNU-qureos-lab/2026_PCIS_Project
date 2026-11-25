@@ -1,0 +1,8 @@
+위성영상 기반 수심 추정 — 제3자 구성요소
+
+Python, Tcl/Tk, NumPy, SciPy, Rasterio/GDAL/PROJ, Pillow 및 관련 의존성을 사용합니다.
+각 배포본에서 제공하는 원문 고지는 licenses 폴더와 프로그램 폴더에 보존합니다.
+정확한 Python 패키지 버전: requirements.txt
+원문 위치 목록: licenses/inventory.json
+해저면 스펙트럼의 출처는 자료/bottom_reflectances 파일의 원래 헤더에 있습니다.
+Coefficient and example provenance and hashes are recorded in DATA/data_sources.json.

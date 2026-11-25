@@ -1,0 +1,54 @@
+{
+  "sensor": "S2A_MSI",
+  "aerosol_model": "MOD2",
+  "AOT550_median_valid_water": 0.2639999985694885,
+  "formula": "factor(band<-SWIR) = T2(band)/T2(SWIR) x Fresnel(band)/Fresnel(SWIR)",
+  "factors": {
+    "B01_from_B11": 0.5503030679450234,
+    "B01_from_B12": 0.5850920496071368,
+    "B02_from_B11": 0.662311618362401,
+    "B02_from_B12": 0.7041815407523598,
+    "B03_from_B11": 0.7704973704564558,
+    "B03_from_B12": 0.8192065644495272,
+    "B04_from_B11": 0.8610654267179226,
+    "B04_from_B12": 0.9155001393060822
+  },
+  "terms": {
+    "B01": {
+      "wavelength_nm": 442.6950461055438,
+      "ttot": 0.5204865845631019,
+      "two_way_transmittance": 0.3187590563297164,
+      "fresnel_reflectance": 0.021123714913738365
+    },
+    "B02": {
+      "wavelength_nm": 492.43657666203694,
+      "ttot": 0.42952728123160355,
+      "two_way_transmittance": 0.3892570894189781,
+      "fresnel_reflectance": 0.020818850120794596
+    },
+    "B03": {
+      "wavelength_nm": 559.8490554870011,
+      "ttot": 0.35396527982363685,
+      "two_way_transmittance": 0.45953828878292957,
+      "fresnel_reflectance": 0.020515417250678396
+    },
+    "B04": {
+      "wavelength_nm": 664.6217529184931,
+      "ttot": 0.2963053594338981,
+      "two_way_transmittance": 0.5215891164091753,
+      "fresnel_reflectance": 0.02019940268751884
+    },
+    "B11": {
+      "wavelength_nm": 1613.659406661006,
+      "ttot": 0.1990884841690797,
+      "two_way_transmittance": 0.6457615192058426,
+      "fresnel_reflectance": 0.018947797475615116
+    },
+    "B12": {
+      "wavelength_nm": 2202.366687171678,
+      "ttot": 0.17535247767522044,
+      "two_way_transmittance": 0.6803243337576435,
+      "fresnel_reflectance": 0.016915803367610737
+    }
+  }
+}

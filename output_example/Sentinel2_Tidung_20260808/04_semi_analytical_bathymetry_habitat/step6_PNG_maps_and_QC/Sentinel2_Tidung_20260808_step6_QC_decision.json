@@ -1,0 +1,36 @@
+{
+  "scene": "Sentinel2_Tidung_20260808",
+  "decision": "PASS",
+  "reasons": [],
+  "mask_rule": "reviewed outline Sentinel2_Tidung_20260808_shallow_water_outline.tif, >= 50% of pixel inside",
+  "analysis_pixels": 9706,
+  "deep_water_reference": {
+    "scene": "Sentinel2_Tidung_20260808",
+    "deep_Rrs_443_sr-1": 0.032025862485170364,
+    "deep_Rrs_490_sr-1": 0.027871552854776382,
+    "deep_Rrs_560_sr-1": 0.02069500833749771,
+    "deep_Rrs_665_sr-1": 0.01237550564110279,
+    "accepted_ROI_count": 5,
+    "solar_zenith_deg": 33.1765162268517,
+    "aggregation_method": "median of 5 window medians; windows >= 2000 m from shallow/land, >= 1200 m apart, blue CV <= 0.05"
+  },
+  "workers": 8,
+  "outputs": [
+    "step1_shallow_water_mask/Sentinel2_Tidung_20260808_step1_shallow_water_analysis_mask.tif",
+    "step3_model_2classes_sand_seagrass/Sentinel2_Tidung_20260808_step3_2classes_depth_m.tif",
+    "step3_model_2classes_sand_seagrass/Sentinel2_Tidung_20260808_step3_2classes_fit_error_relative_RMS_percent.tif",
+    "step3_model_2classes_sand_seagrass/Sentinel2_Tidung_20260808_step3_2classes_fraction_sand.tif",
+    "step3_model_2classes_sand_seagrass/Sentinel2_Tidung_20260808_step3_2classes_fraction_seagrass.tif",
+    "step3_model_2classes_sand_seagrass/Sentinel2_Tidung_20260808_step3_2classes_quality_flags.tif",
+    "step4_model_3classes_sand_seagrass_coral/Sentinel2_Tidung_20260808_step4_3classes_depth_m.tif",
+    "step4_model_3classes_sand_seagrass_coral/Sentinel2_Tidung_20260808_step4_3classes_fit_error_relative_RMS_percent.tif",
+    "step4_model_3classes_sand_seagrass_coral/Sentinel2_Tidung_20260808_step4_3classes_fraction_coral.tif",
+    "step4_model_3classes_sand_seagrass_coral/Sentinel2_Tidung_20260808_step4_3classes_fraction_sand.tif",
+    "step4_model_3classes_sand_seagrass_coral/Sentinel2_Tidung_20260808_step4_3classes_fraction_seagrass.tif",
+    "step4_model_3classes_sand_seagrass_coral/Sentinel2_Tidung_20260808_step4_3classes_quality_flags.tif",
+    "step5_habitat_classes/Sentinel2_Tidung_20260808_step5_2classes_habitat_class_50pct_rule.tif",
+    "step5_habitat_classes/Sentinel2_Tidung_20260808_step5_2classes_habitat_class_70pct_rule.tif",
+    "step5_habitat_classes/Sentinel2_Tidung_20260808_step5_3classes_habitat_class_50pct_rule.tif",
+    "step5_habitat_classes/Sentinel2_Tidung_20260808_step5_3classes_habitat_class_70pct_rule.tif"
+  ]
+}

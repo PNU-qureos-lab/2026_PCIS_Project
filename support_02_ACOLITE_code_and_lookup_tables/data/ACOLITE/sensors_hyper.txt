@@ -1,0 +1,19 @@
+## list of hyperspectral sensors, these have no specific LUT and RSR files
+## RSR will be generated at runtime, LUT is resampled from generic LUT
+CHRIS
+PRISMA
+ISS_HICO
+EO1_HYPERION
+DESIS_HSI
+ENMAP_HSI
+ISS_EMIT
+HYPSO1
+HYPSO2
+OpenCosmos_Hammer
+PACE_OCI
+Tanager
+Wyvern_Dragonette-001
+Wyvern_Dragonette-002
+Wyvern_Dragonette-003
+Hyperfield-1A
+Hyperfield-1B
